@@ -76,6 +76,7 @@
             text-decoration: none;
             color: inherit;
             display: block;
+            cursor: pointer;
         }
 
         /* Карточка / Блок с картинкой */
@@ -121,6 +122,7 @@
 
         .card-content {
             padding: 25px;
+            position: relative;
         }
 
         .card-content h3 {
@@ -135,6 +137,28 @@
         .card-content p {
             color: #888888;
             font-size: 0.95rem;
+        }
+
+        /* Уведомление о копировании */
+        .copy-toast {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            background: #ffffff;
+            color: #000000;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            opacity: 0;
+            transform: translateY(5px);
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .copy-toast.show {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         /* Подвал */
@@ -161,7 +185,7 @@
         <div class="grid">
             
             <!-- 1. YouTube -->
-            <a href="https://www.youtube.com/@cseislvt" target="_blank" class="card-link">
+            <a href="https://youtube.com" target="_blank" class="card-link">
                 <div class="card">
                     <div class="card-image-wrapper">
                         <img src="youtube.jpg" alt="YouTube">
@@ -173,8 +197,8 @@
                 </div>
             </a>
 
-            <!-- 2. Игровой сервер -->
-            <a href="#" class="card-link" onclick="alert('IP сервера: скоро открытие!')">
+            <!-- 2. Игровой сервер (С копированием IP) -->
+            <div class="card-link" onclick="copyServerIP(this)">
                 <div class="card">
                     <div class="card-image-wrapper">
                         <img src="minecraft.png" alt="Minecraft">
@@ -182,9 +206,10 @@
                     <div class="card-content">
                         <h3>Игровой сервер</h3>
                         <p>Собственный Minecraft сервер с акцентом на приватность, white-list и отсутствие доната.</p>
+                        <div class="copy-toast">IP скопирован!</div>
                     </div>
                 </div>
-            </a>
+            </div>
 
             <!-- 3. TikTok -->
             <a href="https://tiktok.com" target="_blank" class="card-link">
@@ -232,6 +257,29 @@
             &copy; 2026 CSEISLVT. Все права защищены.
         </footer>
     </div>
+
+    <!-- Скрипт копирования -->
+    <script>
+        function copyServerIP(element) {
+            const ip = 'mc.cseislvt.online';
+            
+            // Копирование в буфер обмена
+            navigator.clipboard.writeText(ip).then(() => {
+                // Находим плашку уведомления внутри этой карточки
+                const toast = element.querySelector('.copy-toast');
+                
+                // Показываем уведомление
+                toast.classList.add('show');
+                
+                // Скрываем через 2 секунды
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 2000);
+            }).catch(err => {
+                console.error('Ошибка копирования: ', err);
+            });
+        }
+    </script>
 
 </body>
 </html>
