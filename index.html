@@ -1,10 +1,209 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-    <title>Мой сервер Minecraft</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSEISLVT.ONLINE — Главная</title>
+    <style>
+        /* Базовые стили и сброс */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Анимация плавного появления при загрузке */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Главный контейнер (Ограничивает ширину контента) */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Шапка сайта */
+        header {
+            text-align: center;
+            padding: 80px 0 40px 0;
+            animation: fadeInUp 1s ease forwards;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            margin-bottom: 10px;
+            background: linear-gradient(180deg, #fff 0%, #888 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        header p {
+            color: #888888;
+            font-size: 1.1rem;
+            font-weight: 300;
+        }
+
+        /* Сетка для контента (картинки, блоки) */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+            animation: fadeInUp 1.2s ease forwards;
+        }
+
+        /* Карточка / Блок с картинкой */
+        .card {
+            background: #0a0a0a;
+            border: 1px solid #1a1a1a;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+        }
+
+        /* Эффект при наведении на карточку */
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: #333333;
+            box-shadow: 0 20px 40px rgba(255, 255, 255, 0.02);
+        }
+
+        /* Контейнер для изображений */
+        .card-image-wrapper {
+            width: 100%;
+            height: 200px;
+            background: #111111; /* Заглушка, пока картинка грузится */
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #444;
+            font-size: 0.9rem;
+        }
+
+        .card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .card:hover img {
+            transform: scale(1.05); /* Плавное увеличение картинки */
+        }
+
+        .card-content {
+            padding: 25px;
+        }
+
+        .card-content h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .card-content p {
+            color: #888888;
+            font-size: 0.95rem;
+        }
+
+        /* Интерактивная кнопка-ссылка */
+        .btn-connect {
+            display: inline-block;
+            margin-top: 50px;
+            padding: 12px 30px;
+            background-color: #ffffff;
+            color: #000000;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            animation: fadeInUp 1.4s ease forwards;
+        }
+
+        .btn-connect:hover {
+            background-color: #e5e5e5;
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+
+        /* Подвал */
+        footer {
+            text-align: center;
+            margin-top: 100px;
+            padding: 20px;
+            color: #444444;
+            font-size: 0.85rem;
+            border-top: 1px solid #1a1a1a;
+        }
+    </style>
 </head>
 <body>
-    <h1>Добро пожаловать на cseislvt.online!</h1>
-    <p>Сервер скоро откроется.</p>
+
+    <div class="container">
+        <!-- Шапка -->
+        <header>
+            <h1>CSEISLVT.ONLINE</h1>
+            <p>Under construction. Скоро здесь будет что-то масштабное.</p>
+            <!-- Кнопка, куда потом можно встроить копирование IP майнкрафта -->
+            <a href="#" class="btn-connect" onclick="alert('IP сервера появится совсем скоро!')">Подключиться к серверу</a>
+        </header>
+
+        <!-- Сетка карточек, куда ты вставишь свои картинки -->
+        <div class="grid">
+            
+            <!-- Карточка 1 -->
+            <div class="card">
+                <div class="card-image-wrapper">
+                    <!-- Замени 'link_to_image.jpg' на реальную ссылку или путь к картинке -->
+                    <img src="https://unsplash.com" alt="Проект">
+                </div>
+                <div class="card-content">
+                    <h3>О проекте</h3>
+                    <p>Минималистичное пространство для единомышленников. Разрабатываем уникальный игровой экспириенс.</p>
+                </div>
+            </div>
+
+            <!-- Карточка 2 -->
+            <div class="card">
+                <div class="card-image-wrapper">
+                    <!-- Пример со второй картинкой -->
+                    <img src="https://unsplash.com" alt="Minecraft">
+                </div>
+                <div class="card-content">
+                    <h3>Игровой сервер</h3>
+                    <p>Собственный Minecraft сервер с акцентом на приватность, стабильный ТПС и отсутствие лишнего доната.</p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Подвал -->
+        <footer>
+            &copy; 2026 cseislvt.online. Все права защищены.
+        </footer>
+    </div>
+
 </body>
 </html>
