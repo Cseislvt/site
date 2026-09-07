@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CSEISLVT.ONLINE — Главная</title>
+    <title>CSEISLVT</title>
     <style>
         /* Базовые стили и сброс */
         * {
@@ -32,7 +32,7 @@
             }
         }
 
-        /* Главный контейнер (Ограничивает ширину контента) */
+        /* Главный контейнер */
         .container {
             max-width: 900px;
             margin: 0 auto;
@@ -42,12 +42,12 @@
         /* Шапка сайта */
         header {
             text-align: center;
-            padding: 80px 0 40px 0;
+            padding: 80px 0 20px 0;
             animation: fadeInUp 1s ease forwards;
         }
 
         header h1 {
-            font-size: 3rem;
+            font-size: 3.5rem;
             font-weight: 700;
             letter-spacing: -1px;
             margin-bottom: 10px;
@@ -62,13 +62,20 @@
             font-weight: 300;
         }
 
-        /* Сетка для контента (картинки, блоки) */
+        /* Сетка для контента */
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 30px;
-            margin-top: 60px;
+            margin-top: 40px;
             animation: fadeInUp 1.2s ease forwards;
+        }
+
+        /* Тег ссылки вокруг карточки, делающий ее кнопкой */
+        .card-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
         }
 
         /* Карточка / Блок с картинкой */
@@ -77,28 +84,27 @@
             border: 1px solid #1a1a1a;
             border-radius: 12px;
             overflow: hidden;
+            height: 100%;
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
         }
 
-        /* Эффект при наведении на карточку */
-        .card:hover {
+        /* Эффект при наведении на карточку-кнопку */
+        .card-link:hover .card {
             transform: translateY(-5px);
             border-color: #333333;
-            box-shadow: 0 20px 40px rgba(255, 255, 255, 0.02);
+            box-shadow: 0 20px 40px rgba(255, 255, 255, 0.03);
         }
 
         /* Контейнер для изображений */
         .card-image-wrapper {
             width: 100%;
             height: 200px;
-            background: #111111; /* Заглушка, пока картинка грузится */
+            background: #111111; 
             overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #444;
-            font-size: 0.9rem;
         }
 
         .card img {
@@ -108,8 +114,9 @@
             transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        .card:hover img {
-            transform: scale(1.05); /* Плавное увеличение картинки */
+        /* Анимация картинки при наведении */
+        .card-link:hover .card img {
+            transform: scale(1.05); 
         }
 
         .card-content {
@@ -120,32 +127,14 @@
             font-size: 1.3rem;
             margin-bottom: 10px;
             font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .card-content p {
             color: #888888;
             font-size: 0.95rem;
-        }
-
-        /* Интерактивная кнопка-ссылка */
-        .btn-connect {
-            display: inline-block;
-            margin-top: 50px;
-            padding: 12px 30px;
-            background-color: #ffffff;
-            color: #000000;
-            text-decoration: none;
-            border-radius: 30px;
-            font-weight: 600;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-            animation: fadeInUp 1.4s ease forwards;
-        }
-
-        .btn-connect:hover {
-            background-color: #e5e5e5;
-            transform: scale(1.02);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
         }
 
         /* Подвал */
@@ -164,44 +153,83 @@
     <div class="container">
         <!-- Шапка -->
         <header>
-            <h1>CSEISLVT.ONLINE</h1>
-            <p>Under construction. Скоро здесь будет что-то масштабное.</p>
-            <!-- Кнопка, куда потом можно встроить копирование IP майнкрафта -->
-            <a href="#" class="btn-connect" onclick="alert('IP сервера появится совсем скоро!')">Подключиться к серверу</a>
+            <h1>CSEISLVT</h1>
+            <p>Официальные ресурсы проекта</p>
         </header>
 
-        <!-- Сетка карточек, куда ты вставишь свои картинки -->
+        <!-- Сетка кнопок-вкладок -->
         <div class="grid">
             
-            <!-- Карточка 1 -->
-            <div class="card">
-                <div class="card-image-wrapper">
-                    <!-- Замени 'link_to_image.jpg' на реальную ссылку или путь к картинке -->
-                    <img src="https://unsplash.com" alt="Проект">
+            <!-- 1. YouTube -->
+            <a href="https://www.youtube.com/@cseislvt" target="_blank" class="card-link">
+                <div class="card">
+                    <div class="card-image-wrapper">
+                        <img src="youtube.jpg" alt="YouTube">
+                    </div>
+                    <div class="card-content">
+                        <h3>YouTube</h3>
+                        <p>Официальный канал проекта. Видео, стримы и бэкстейдж разработки.</p>
+                    </div>
                 </div>
-                <div class="card-content">
-                    <h3>О проекте</h3>
-                    <p>Минималистичное пространство для единомышленников. Разрабатываем уникальный игровой экспириенс.</p>
-                </div>
-            </div>
+            </a>
 
-            <!-- Карточка 2 -->
-            <div class="card">
-                <div class="card-image-wrapper">
-                    <!-- Пример со второй картинкой -->
-                    <img src="https://unsplash.com" alt="Minecraft">
+            <!-- 2. Игровой сервер -->
+            <a href="#" class="card-link" onclick="alert('IP сервера: скоро открытие!')">
+                <div class="card">
+                    <div class="card-image-wrapper">
+                        <img src="minecraft.png" alt="Minecraft">
+                    </div>
+                    <div class="card-content">
+                        <h3>Игровой сервер</h3>
+                        <p>Собственный Minecraft сервер с акцентом на приватность, white-list и отсутствие доната.</p>
+                    </div>
                 </div>
-                <div class="card-content">
-                    <h3>Игровой сервер</h3>
-                    <p>Собственный Minecraft сервер с акцентом на приватность, стабильный ТПС и отсутствие лишнего доната.</p>
+            </a>
+
+            <!-- 3. TikTok -->
+            <a href="https://tiktok.com" target="_blank" class="card-link">
+                <div class="card">
+                    <div class="card-image-wrapper">
+                        <img src="tiktok.png" alt="TikTok">
+                    </div>
+                    <div class="card-content">
+                        <h3>TikTok</h3>
+                        <p>Короткие ролики, инсайды и забавные моменты из жизни cseislvt.</p>
+                    </div>
                 </div>
-            </div>
+            </a>
+
+            <!-- 4. Telegram -->
+            <a href="https://t.me" target="_blank" class="card-link">
+                <div class="card">
+                    <div class="card-image-wrapper">
+                        <img src="telegram cseislvt.png" alt="Telegram">
+                    </div>
+                    <div class="card-content">
+                        <h3>Telegram</h3>
+                        <p>Главный новостной хаб. Все важные анонсы и обсуждения комьюнити здесь.</p>
+                    </div>
+                </div>
+            </a>
+
+            <!-- 5. Игра CHPONK! на itch.io -->
+            <a href="https://itch.io" target="_blank" class="card-link">
+                <div class="card">
+                    <div class="card-image-wrapper">
+                        <img src="chponk.jpg" alt="CHPONK!">
+                    </div>
+                    <div class="card-content">
+                        <h3>Игра CHPONK!</h3>
+                        <p>Наш игровой проект на платформе itch.io. Заходи и зацени геймплей.</p>
+                    </div>
+                </div>
+            </a>
 
         </div>
 
         <!-- Подвал -->
         <footer>
-            &copy; 2026 cseislvt.online. Все права защищены.
+            &copy; 2026 CSEISLVT. Все права защищены.
         </footer>
     </div>
 
