@@ -14,10 +14,18 @@
         }
 
         body {
+            /* Добавляем фоновую картинку */
             background-color: #000000;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.9)), url('cseislvt.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed; /* Фон фиксируется при прокрутке */
+            background-repeat: no-repeat;
+            
             color: #ffffff;
             overflow-x: hidden;
             line-height: 1.6;
+            min-height: 100vh;
         }
 
         /* Анимация плавного появления при загрузке */
@@ -37,6 +45,8 @@
             max-width: 900px;
             margin: 0 auto;
             padding: 40px 20px;
+            position: relative;
+            z-index: 1;
         }
 
         /* Шапка сайта */
@@ -57,7 +67,7 @@
         }
 
         header p {
-            color: #888888;
+            color: #cccccc; /* Сделал чуть светлее на фоне картинки */
             font-size: 1.1rem;
             font-weight: 300;
         }
@@ -81,7 +91,8 @@
 
         /* Карточка / Блок с картинкой */
         .card {
-            background: #0a0a0a;
+            background: rgba(10, 10, 10, 0.85); /* Полупрозрачный фон карточек */
+            backdrop-filter: blur(10px); /* Эффект стекла (необязательно, но красиво) */
             border: 1px solid #1a1a1a;
             border-radius: 12px;
             overflow: hidden;
@@ -94,7 +105,7 @@
         .card-link:hover .card {
             transform: translateY(-5px);
             border-color: #333333;
-            box-shadow: 0 20px 40px rgba(255, 255, 255, 0.03);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
         }
 
         /* Контейнер для изображений */
@@ -135,7 +146,7 @@
         }
 
         .card-content p {
-            color: #888888;
+            color: #999999;
             font-size: 0.95rem;
         }
 
@@ -166,9 +177,9 @@
             text-align: center;
             margin-top: 100px;
             padding: 20px;
-            color: #444444;
+            color: #666666;
             font-size: 0.85rem;
-            border-top: 1px solid #1a1a1a;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
     </style>
 </head>
@@ -228,7 +239,8 @@
             <a href="https://t.me/cseislvt" target="_blank" class="card-link">
                 <div class="card">
                     <div class="card-image-wrapper">
-                        <img src="telegram cseislvt.png" alt="Telegram">
+                        <!-- Исправлен пробел в названии картинки на %20 -->
+                        <img src="telegram%20cseislvt.png" alt="Telegram">
                     </div>
                     <div class="card-content">
                         <h3>Telegram</h3>
@@ -238,14 +250,14 @@
             </a>
 
             <!-- 5. Игра CHPONK! на itch.io -->
-            <a href="https://itch.io" target="_blank" class="card-link">
+            <a href="https://cseislvt.itch.io/chponk" target="_blank" class="card-link">
                 <div class="card">
                     <div class="card-image-wrapper">
                         <img src="chponk.jpg" alt="CHPONK!">
                     </div>
                     <div class="card-content">
                         <h3>Игра CHPONK!</h3>
-                        <p>Наш игровой проект на платформе itch.io. Заходи и зацени геймплей.</p>
+                        <p>Мой игровой проект на платформе itch.io. Заходи и зацени геймплей.</p>
                     </div>
                 </div>
             </a>
