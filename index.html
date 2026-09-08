@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CSEISLVT</title>
     <style>
-        /* Базовые стили и сброс */
         * {
             margin: 0;
             padding: 0;
@@ -14,33 +13,24 @@
         }
 
         body {
-            /* Добавляем фоновую картинку */
             background-color: #000000;
-            background-image: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.9)), url('cseislvt.png');
+            /* ИСПРАВЛЕН ПУТЬ К КАРТИНКЕ (без буквы L, большими буквами PNG) */
+            background-image: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.9)), url('cseisvt.PNG');
             background-size: cover;
             background-position: center;
-            background-attachment: fixed; /* Фон фиксируется при прокрутке */
+            background-attachment: fixed;
             background-repeat: no-repeat;
-            
             color: #ffffff;
             overflow-x: hidden;
             line-height: 1.6;
             min-height: 100vh;
         }
 
-        /* Анимация плавного появления при загрузке */
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Главный контейнер */
         .container {
             max-width: 900px;
             margin: 0 auto;
@@ -49,7 +39,6 @@
             z-index: 1;
         }
 
-        /* Шапка сайта */
         header {
             text-align: center;
             padding: 80px 0 20px 0;
@@ -67,12 +56,11 @@
         }
 
         header p {
-            color: #cccccc; /* Сделал чуть светлее на фоне картинки */
+            color: #cccccc;
             font-size: 1.1rem;
             font-weight: 300;
         }
 
-        /* Сетка для контента */
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -81,7 +69,6 @@
             animation: fadeInUp 1.2s ease forwards;
         }
 
-        /* Тег ссылки вокруг карточки, делающий ее кнопкой */
         .card-link {
             text-decoration: none;
             color: inherit;
@@ -89,10 +76,9 @@
             cursor: pointer;
         }
 
-        /* Карточка / Блок с картинкой */
         .card {
-            background: rgba(10, 10, 10, 0.85); /* Полупрозрачный фон карточек */
-            backdrop-filter: blur(10px); /* Эффект стекла (необязательно, но красиво) */
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(10px);
             border: 1px solid #1a1a1a;
             border-radius: 12px;
             overflow: hidden;
@@ -101,14 +87,12 @@
             position: relative;
         }
 
-        /* Эффект при наведении на карточку-кнопку */
         .card-link:hover .card {
             transform: translateY(-5px);
             border-color: #333333;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
         }
 
-        /* Контейнер для изображений */
         .card-image-wrapper {
             width: 100%;
             height: 200px;
@@ -126,7 +110,6 @@
             transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* Анимация картинки при наведении */
         .card-link:hover .card img {
             transform: scale(1.05); 
         }
@@ -150,29 +133,6 @@
             font-size: 0.95rem;
         }
 
-        /* Уведомление о копировании */
-        .copy-toast {
-            position: absolute;
-            top: 20px;
-            right: 25px;
-            background: #ffffff;
-            color: #000000;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            opacity: 0;
-            transform: translateY(5px);
-            transition: all 0.3s ease;
-            pointer-events: none;
-        }
-
-        .copy-toast.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Подвал */
         footer {
             text-align: center;
             margin-top: 100px;
@@ -186,13 +146,11 @@
 <body>
 
     <div class="container">
-        <!-- Шапка -->
         <header>
             <h1>CSEISLVT</h1>
             <p>Лазанья стала еще вкусней, вместо мяса некоарк кот.</p>
         </header>
 
-        <!-- Сетка кнопок-вкладок -->
         <div class="grid">
             
             <!-- 1. YouTube -->
@@ -208,19 +166,18 @@
                 </div>
             </a>
 
-            <!-- 2. Игровой сервер (С копированием IP) -->
-            <div class="card-link" onclick="copyServerIP(this)">
+            <!-- 2. Игровой сервер (Теперь ссылка на новую страницу) -->
+            <a href="minecraft-server.html" class="card-link">
                 <div class="card">
                     <div class="card-image-wrapper">
                         <img src="minecraft.png" alt="Minecraft">
                     </div>
                     <div class="card-content">
                         <h3>Игровой сервер</h3>
-                        <p>Собственный Minecraft сервер с акцентом на приватность, white-list и отсутствие доната.</p>
-                        <div class="copy-toast">IP скопирован!</div>
+                        <p>Собственный Minecraft сервер с акцентом на приватность, white-list и отсутствие доната. Нажми, чтобы узнать подробности.</p>
                     </div>
                 </div>
-            </div>
+            </a>
 
             <!-- 3. TikTok -->
             <a href="https://www.tiktok.com/@cseislvt" target="_blank" class="card-link">
@@ -239,7 +196,6 @@
             <a href="https://t.me/cseislvt" target="_blank" class="card-link">
                 <div class="card">
                     <div class="card-image-wrapper">
-                        <!-- Исправлен пробел в названии картинки на %20 -->
                         <img src="telegram%20cseislvt.png" alt="Telegram">
                     </div>
                     <div class="card-content">
@@ -264,34 +220,10 @@
 
         </div>
 
-        <!-- Подвал -->
         <footer>
             &copy; 2026 CSEISLVT. Все права защищены.
         </footer>
     </div>
-
-    <!-- Скрипт копирования -->
-    <script>
-        function copyServerIP(element) {
-            const ip = 'mc.cseislvt.online';
-            
-            // Копирование в буфер обмена
-            navigator.clipboard.writeText(ip).then(() => {
-                // Находим плашку уведомления внутри этой карточки
-                const toast = element.querySelector('.copy-toast');
-                
-                // Показываем уведомление
-                toast.classList.add('show');
-                
-                // Скрываем через 2 секунды
-                setTimeout(() => {
-                    toast.classList.remove('show');
-                }, 2000);
-            }).catch(err => {
-                console.error('Ошибка копирования: ', err);
-            });
-        }
-    </script>
 
 </body>
 </html>
