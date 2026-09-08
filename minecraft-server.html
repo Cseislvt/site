@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minecraft Сервер - CSEISLVT</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            /* Убрали темный градиент, поставили minecraft.png на весь фон */
+            background-color: #000000;
+            background-image: url('minecraft.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            color: #ffffff;
+            overflow-x: hidden;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        /* Кнопка "Назад" */
+        .back-link {
+            display: inline-block;
+            margin-bottom: 30px;
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8); /* Тень для читаемости */
+        }
+        .back-link:hover { color: #cccccc; }
+
+        header {
+            padding: 40px 0 20px 0;
+            animation: fadeInUp 1s ease forwards;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(180deg, #fff 0%, #ddd 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.5); /* Тень для читаемости */
+        }
+
+        header p {
+            color: #f0f0f0;
+            font-size: 1.1rem;
+            font-weight: 300;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8); /* Тень для читаемости */
+        }
+
+        /* Блок с кнопками */
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 40px;
+            animation: fadeInUp 1.2s ease forwards;
+        }
+
+        .action-btn {
+            background: rgba(0, 0, 0, 0.6); /* Полупрозрачный черный фон для самих кнопок */
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            text-decoration: none;
+            position: relative;
+            transition: all 0.3s ease;
+            display: block;
+            width: 100%;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-3px);
+            background: rgba(0, 0, 0, 0.8); /* Затемняем кнопку при наведении */
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+
+        .btn-subtext {
+            display: block;
+            font-size: 0.9rem;
+            color: #ccc;
+            font-weight: 400;
+            margin-top: 5px;
+        }
+
+        /* Уведомление о копировании */
+        .copy-toast {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: #ffffff;
+            color: #000000;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            opacity: 0;
+            transform: translateY(5px);
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+        .copy-toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 100px;
+            padding: 20px;
+            color: #ffffff;
+            font-size: 0.85rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <a href="index.html" class="back-link">← Вернуться на главную</a>
+        
+        <header>
+            <h1>Minecraft Сервер</h1>
+            <p>Собственный сервер с приватностью и white-list'ом.</p>
+        </header>
+
+        <div class="action-buttons">
+            
+            <!-- Кнопка копирования IP -->
+            <div class="action-btn" onclick="copyServerIP(this)">
+                Скопировать IP сервера
+                <span class="btn-subtext">Нажми, чтобы скопировать: mc.cseislvt.online</span>
+                <div class="copy-toast">IP скопирован!</div>
+            </div>
+
+            <!-- Кнопка карты мира -->
+            <a href="https://map.cseislvt.online" target="_blank" class="action-btn">
+                Посмотреть карту мира
+                <span class="btn-subtext">Откроется в новой вкладке</span>
+            </a>
+
+        </div>
+
+        <footer>
+            &copy; 2026 CSEISLVT. Все права защищены.
+        </footer>
+    </div>
+
+    <script>
+        function copyServerIP(element) {
+            const ip = 'mc.cseislvt.online';
+            
+            navigator.clipboard.writeText(ip).then(() => {
+                const toast = element.querySelector('.copy-toast');
+                toast.classList.add('show');
+                
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 2000);
+            }).catch(err => {
+                console.error('Ошибка копирования: ', err);
+            });
+        }
+    </script>
+
+</body>
+</html>
