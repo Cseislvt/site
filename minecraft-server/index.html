@@ -11,7 +11,6 @@
         }
         body {
             background-color: #000000;
-            /* ИСПРАВЛЕНО: Путь от корня сайта, чтобы картинка не терялась при любой вложенности */
             background-image: url('/minecraft.png'); 
             background-size: cover; background-position: center; background-attachment: fixed; background-repeat: no-repeat;
             color: #ffffff; overflow-x: hidden; line-height: 1.6; min-height: 100vh;
@@ -19,14 +18,52 @@
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .container { max-width: 600px; margin: 0 auto; padding: 40px 20px; position: relative; z-index: 1; text-align: center; }
         
-        /* ИСПРАВЛЕНО: Убрали index.html из ссылки возврата */
         .back-link { display: inline-block; margin-bottom: 30px; color: #ffffff; text-decoration: none; font-size: 0.9rem; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
         .back-link:hover { color: #cccccc; }
         
         header { padding: 40px 0 20px 0; animation: fadeInUp 1s ease forwards; }
         header h1 { font-size: 3rem; font-weight: 700; margin-bottom: 10px; background: linear-gradient(180deg, #fff 0%, #ddd 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 4px 10px rgba(0,0,0,0.5); }
         header p { color: #f0f0f0; font-size: 1.1rem; font-weight: 300; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
-        .action-buttons { display: flex; flex-direction: column; gap: 20px; margin-top: 40px; animation: fadeInUp 1.2s ease forwards; }
+        
+        /* СТИЛИ ДЛЯ СТАТУСА СЕРВЕРА */
+        .status-card {
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            animation: fadeInUp 1.1s ease forwards;
+        }
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #555; /* По умолчанию серый */
+        }
+        .status-dot.online {
+            background: #2ecc71;
+            box-shadow: 0 0 10px #2ecc71;
+        }
+        .status-dot.offline {
+            background: #e74c3c;
+            box-shadow: 0 0 10px #e74c3c;
+        }
+        .status-text {
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+        .players-count {
+            color: #aaaaaa;
+            font-size: 0.95rem;
+            margin-left: 5px;
+        }
+
+        .action-buttons { display: flex; flex-direction: column; gap: 20px; margin-top: 20px; animation: fadeInUp 1.2s ease forwards; }
         .action-btn { background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; padding: 25px; border-radius: 12px; font-size: 1.2rem; font-weight: 600; text-align: center; cursor: pointer; text-decoration: none; position: relative; transition: all 0.3s ease; display: block; width: 100%; }
         .action-btn:hover { transform: translateY(-3px); background: rgba(0, 0, 0, 0.8); border-color: rgba(255, 255, 255, 0.5); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
         .btn-subtext { display: block; font-size: 0.9rem; color: #ccc; font-weight: 400; margin-top: 5px; }
@@ -37,31 +74,79 @@
 </head>
 <body>
     <div class="container">
-        <!-- ИСПРАВЛЕНО: Ссылка ведет просто на корень сайта -->
         <a href="/" class="back-link">← Вернуться на главную</a>
         <header>
             <h1>Minecraft Сервер</h1>
             <p>Собственный сервер с приватностью и white-list'ом.</p>
         </header>
+
+        <!-- БЛОК СТАТУСА -->
+        <div class="status-card">
+            <div id="statusDot" class="status-dot"></div>
+            <div class="status-text">
+                Статус: <span id="statusLabel">Проверка...</span>
+                <span id="playersCount" class="players-count"></span>
+            </div>
+        </div>
+
         <div class="action-buttons">
-            <!-- Кнопка копирования IP -->
             <div class="action-btn" onclick="copyServerIP(this)">
                 Скопировать IP сервера
                 <span class="btn-subtext">Нажми, чтобы скопировать: mc.cseislvt.online</span>
                 <div class="copy-toast">IP скопирован!</div>
             </div>
         </div>
-        <footer>&copy; 2026 CSEISLVT. Все права reserved.</footer>
+        <footer>&copy; 2026 CSEISLVT. Все права защищены.</footer>
     </div>
+
     <script>
+        const serverIP = 'mc.cseislvt.online';
+
+        // Функция копирования
         function copyServerIP(element) {
-            const ip = 'mc.cseislvt.online';
-            navigator.clipboard.writeText(ip).then(() => {
+            navigator.clipboard.writeText(serverIP).then(() => {
                 const toast = element.querySelector('.copy-toast');
                 toast.classList.add('show');
                 setTimeout(() => { toast.classList.remove('show'); }, 2000);
             }).catch(err => { console.error('Ошибка копирования: ', err); });
         }
+
+        // ФУНКЦИЯ ПРОВЕРКИ ОНЛАЙНА СЕРВЕРА
+        async function checkServerStatus() {
+            const dot = document.getElementById('statusDot');
+            const label = document.getElementById('statusLabel');
+            const players = document.getElementById('playersCount');
+
+            try {
+                // Используем бесплатный проверенный API без ключей
+                const response = await fetch(`https://mcsrvstat.us{serverIP}`);
+                const data = await response.json();
+
+                if (data.online === true) {
+                    dot.className = 'status-dot online';
+                    label.innerText = 'В СЕТИ';
+                    label.style.color = '#2ecc71';
+                    
+                    // Показываем количество игроков, если они есть
+                    const onlinePlayers = data.players?.online ?? 0;
+                    const maxPlayers = data.players?.max ?? 20;
+                    players.innerText = `(Онлайн: ${onlinePlayers} / ${maxPlayers})`;
+                } else {
+                    dot.className = 'status-dot offline';
+                    label.innerText = 'ОФФЛАЙН';
+                    label.style.color = '#e74c3c';
+                    players.innerText = '';
+                }
+            } catch (error) {
+                console.error('Ошибка получения статуса:', error);
+                dot.className = 'status-dot offline';
+                label.innerText = 'ОШИБКА ПРОВЕРКИ';
+                players.innerText = '';
+            }
+        }
+
+        // Запуск проверки при загрузке
+        checkServerStatus();
     </script>
 </body>
 </html>
