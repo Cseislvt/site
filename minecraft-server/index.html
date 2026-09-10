@@ -231,16 +231,25 @@
 
                 const data = await response.json();
 
-                // Универсальный парсер. Ищем данные в разных возможных форматах API
+                // Универсальный парсер.
                 const isOnline = data.online === true || data.status === true || data.status === 'online' || data.online === 'online';
                 
-                // MOTD (Описание)
+                // MOTD (Описание) - безопасное извлечение
                 let motdHtml = '';
-                if (data.motd) {
-                    if (typeof data.motd === 'string') motdHtml = data.motd;
-                    else if (data.motd.html) motdHtml = data.motd.html.join('<br>');
-                    else if (data.motd.clean) motdHtml = Array.isArray(data.motd.clean) ? data.motd.clean.join('<br>') : data.motd.clean;
-                }
+                try {
+                    if (data.motd) {
+                        if (typeof data.motd === 'string') {
+                            motdHtml = data.motd.replace(/\n/g, '<br>');
+                        } else if (Array.isArray(data.motd)) {
+                            motdHtml = data.motd.join('<br>');
+                        } else if (data.motd.html && Array.isArray(data.motd.html)) {
+                            motdHtml = data.motd.html.join('<br>');
+                        } else if (data.motd.clean && Array.isArray(data.motd.clean)) {
+                            motdHtml = data.motd.clean.join('<br>');
+                        }
+                    }
+                } catch (e) { console.warn('Ошибка парсинга MOTD:', e); }
+                
                 motd.innerHTML = motdHtml || '<span style="color:#888">MOTD не установлен</span>';
 
                 // Иконка сервера
@@ -257,7 +266,7 @@
                     label.innerText = 'В СЕТИ';
                     label.style.color = '#2ecc71';
 
-                    // Игроки (проверяем где они лежат в API)
+                    // Игроки
                     let onlineNow = 0;
                     let onlineMax = 0;
                     
@@ -292,7 +301,7 @@
                     
                     version.innerText = versionStr ? `Версия: ${versionStr}` : '';
 
-                    // Доп. информация (очищаем, так как формат API неизвестен)
+                    // Доп. информация
                     info.innerText = '';
 
                 } else {
