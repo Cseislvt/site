@@ -181,7 +181,8 @@
 
     <script>
         const serverIP = 'mc.cseislvt.online';
-        let lastUpdated = null; // время последнего успешного/неуспешного обновления
+        const apiUrl = 'https://obsidian-mc.ru/api/monitoring/v1/servers/VPl1GpA6eO/status/mc.cseislvt.online';
+        let lastUpdated = null; 
 
         function copyServerIP(element) {
             navigator.clipboard.writeText(serverIP).then(() => {
@@ -198,7 +199,7 @@
             }[c]));
         }
 
-        // ПРОВЕРКА СТАТУСА ЧЕРЕЗ API mcstatus.io
+        // ПРОВЕРКА СТАТУСА ЧЕРЕЗ API OBSIDIAN-MC.RU
         async function checkServerStatus() {
             const dot         = document.getElementById('statusDot');
             const label       = document.getElementById('statusLabel');
@@ -225,40 +226,57 @@
             }
 
             try {
-                const response = await fetch(`https://api.mcstatus.io/v2/status/java/${serverIP}`);
+                const response = await fetch(apiUrl);
                 if (!response.ok) throw new Error('HTTP error! status: ' + response.status);
 
                 const data = await response.json();
 
-                // MOTD (описание сервера, с цветами)
-                const motdHtml = data.motd?.html;
-                motd.innerHTML = (motdHtml && motdHtml.length)
-                    ? motdHtml.join('<br>')
-                    : '<span style="color:#888">MOTD не установлен</span>';
+                // Универсальный парсер. Ищем данные в разных возможных форматах API
+                const isOnline = data.online === true || data.status === true || data.status === 'online' || data.online === 'online';
+                
+                // MOTD (Описание)
+                let motdHtml = '';
+                if (data.motd) {
+                    if (typeof data.motd === 'string') motdHtml = data.motd;
+                    else if (data.motd.html) motdHtml = data.motd.html.join('<br>');
+                    else if (data.motd.clean) motdHtml = Array.isArray(data.motd.clean) ? data.motd.clean.join('<br>') : data.motd.clean;
+                }
+                motd.innerHTML = motdHtml || '<span style="color:#888">MOTD не установлен</span>';
 
                 // Иконка сервера
-                if (data.icon) {
-                    icon.src = data.icon;
+                const iconSrc = data.icon || data.favicon;
+                if (iconSrc) {
+                    icon.src = iconSrc;
                     icon.hidden = false;
                 } else {
                     icon.hidden = true;
                 }
 
-                if (data.online === true) {
+                if (isOnline) {
                     dot.className = 'status-dot online';
                     label.innerText = 'В СЕТИ';
                     label.style.color = '#2ecc71';
 
-                    // Игроки
-                    const onlineNow = data.players?.online ?? 0;
-                    const onlineMax = data.players?.max ?? 20;
+                    // Игроки (проверяем где они лежат в API)
+                    let onlineNow = 0;
+                    let onlineMax = 0;
+                    
+                    if (typeof data.players === 'number') onlineNow = data.players;
+                    else if (data.players?.online !== undefined) onlineNow = data.players.online;
+                    else if (data.players_online !== undefined) onlineNow = data.players_online;
+
+                    if (typeof data.max_players === 'number') onlineMax = data.max_players;
+                    else if (data.players?.max !== undefined) onlineMax = data.players.max;
+                    else if (data.players_max !== undefined) onlineMax = data.players_max;
+                    else onlineMax = 20; // дефолт
+
                     players.innerText = `Игроки: ${onlineNow} / ${onlineMax}`;
 
-                    // Список игроков онлайн
-                    const list = data.players?.list ?? [];
+                    // Список игроков (если API его отдает)
+                    const list = data.players?.list || data.players_list || [];
                     if (list.length > 0) {
                         playersList.innerHTML = list
-                            .map(p => `<span class="player-chip">${esc(p.name_clean)}</span>`)
+                            .map(p => `<span class="player-chip">${esc(p.name_clean || p.name || p)}</span>`)
                             .join('');
                     } else if (onlineNow > 0) {
                         playersList.innerHTML = '<span class="no-players">Список игроков скрыт сервером</span>';
@@ -266,21 +284,16 @@
                         playersList.innerHTML = '<span class="no-players">Сейчас на сервере никого нет</span>';
                     }
 
-                    // Версия + протокол
-                    if (data.version?.name_clean) {
-                        version.innerText = `Версия: ${data.version.name_clean} (протокол ${data.version.protocol ?? '?'})`;
-                    } else {
-                        version.innerText = '';
-                    }
+                    // Версия
+                    let versionStr = '';
+                    if (typeof data.version === 'string') versionStr = data.version;
+                    else if (data.version?.name_clean) versionStr = data.version.name_clean;
+                    else if (data.version?.name) versionStr = data.version.name;
+                    
+                    version.innerText = versionStr ? `Версия: ${versionStr}` : '';
 
-                    // Доп. информация: реальный IP, порт, EULA
-                    const infoParts = [];
-                    if (data.ip_address) infoParts.push(`IP: ${data.ip_address}`);
-                    if (data.srv_record?.port && data.srv_record.port !== 25565) {
-                        infoParts.push(`Порт: ${data.srv_record.port}`);
-                    }
-                    if (data.eula_blocked) infoParts.push('⚠ Заблокирован по EULA');
-                    info.innerText = infoParts.join(' • ');
+                    // Доп. информация (очищаем, так как формат API неизвестен)
+                    info.innerText = '';
 
                 } else {
                     setOffline();
