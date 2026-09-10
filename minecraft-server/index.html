@@ -123,39 +123,12 @@
             }).catch(err => { console.error('Ошибка копирования: ', err); });
         }
 
-        // РАБОЧИЙ СКРИПТ ЧЕРЕЗ CORS-ПРОКСИ
+        // ПРОВЕРКА СТАТУСА ЧЕРЕЗ API mcsrvstat.us (поддерживает CORS, работает на GitHub Pages)
         async function checkServerStatus() {
             const dot = document.getElementById('statusDot');
             const label = document.getElementById('statusLabel');
             const players = document.getElementById('playersCount');
             const version = document.getElementById('serverVersion');
-
-            try {
-                // Используем стабильный прокси, чтобы обойти сетевые затыки браузера
-                const response = await fetch(`https://herokuapp.com{serverIP}`);
-                if (!response.ok) throw new Error('Proxy error');
-                
-                const data = await response.json();
-
-                if (data && data.online === true) {
-                    dot.className = 'status-dot online';
-                    label.innerText = 'В СЕТИ';
-                    label.style.color = '#2ecc71';
-                    
-                    const onlineNow = data.players?.online ?? 0;
-                    const onlineMax = data.players?.max ?? 20;
-                    players.innerText = `Игроки: ${onlineNow} / ${onlineMax}`;
-                    
-                    if (data.version?.name) {
-                        version.innerText = `Версия: ${data.version.name}`;
-                    }
-                } else {
-                    setOffline();
-                }
-            } catch (error) {
-                console.error('Ошибка:', error);
-                setOffline();
-            }
 
             function setOffline() {
                 dot.className = 'status-dot offline';
@@ -164,9 +137,40 @@
                 players.innerText = 'Сервер временно недоступен';
                 version.innerText = '';
             }
+
+            try {
+                // Правильный API-адрес с подстановкой IP
+                const response = await fetch(`https://api.mcsrvstat.us/3/${serverIP}`);
+                if (!response.ok) throw new Error('API error');
+
+                const data = await response.json();
+
+                if (data && data.online === true) {
+                    dot.className = 'status-dot online';
+                    label.innerText = 'В СЕТИ';
+                    label.style.color = '#2ecc71';
+
+                    const onlineNow = data.players?.online ?? 0;
+                    const onlineMax = data.players?.max ?? 20;
+                    players.innerText = `Игроки: ${onlineNow} / ${onlineMax}`;
+
+                    if (data.version?.name) {
+                        version.innerText = `Версия: ${data.version.name}`;
+                    } else {
+                        version.innerText = '';
+                    }
+                } else {
+                    setOffline();
+                }
+            } catch (error) {
+                console.error('Ошибка:', error);
+                setOffline();
+            }
         }
 
         checkServerStatus();
+        // Автообновление статуса каждую минуту
+        setInterval(checkServerStatus, 60000);
     </script>
 </body>
 </html>
