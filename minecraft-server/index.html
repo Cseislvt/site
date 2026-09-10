@@ -11,14 +11,18 @@
         }
         body {
             background-color: #000000;
-            background-image: url('../minecraft.png'); /* Путь к картинке с главной папки */
+            /* ИСПРАВЛЕНО: Путь от корня сайта, чтобы картинка не терялась при любой вложенности */
+            background-image: url('/minecraft.png'); 
             background-size: cover; background-position: center; background-attachment: fixed; background-repeat: no-repeat;
             color: #ffffff; overflow-x: hidden; line-height: 1.6; min-height: 100vh;
         }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .container { max-width: 600px; margin: 0 auto; padding: 40px 20px; position: relative; z-index: 1; text-align: center; }
+        
+        /* ИСПРАВЛЕНО: Убрали index.html из ссылки возврата */
         .back-link { display: inline-block; margin-bottom: 30px; color: #ffffff; text-decoration: none; font-size: 0.9rem; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
         .back-link:hover { color: #cccccc; }
+        
         header { padding: 40px 0 20px 0; animation: fadeInUp 1s ease forwards; }
         header h1 { font-size: 3rem; font-weight: 700; margin-bottom: 10px; background: linear-gradient(180deg, #fff 0%, #ddd 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 4px 10px rgba(0,0,0,0.5); }
         header p { color: #f0f0f0; font-size: 1.1rem; font-weight: 300; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
@@ -33,7 +37,8 @@
 </head>
 <body>
     <div class="container">
-        <a href="../index.html" class="back-link">← Вернуться на главную</a>
+        <!-- ИСПРАВЛЕНО: Ссылка ведет просто на корень сайта -->
+        <a href="/" class="back-link">← Вернуться на главную</a>
         <header>
             <h1>Minecraft Сервер</h1>
             <p>Собственный сервер с приватностью и white-list'ом.</p>
@@ -46,7 +51,7 @@
                 <div class="copy-toast">IP скопирован!</div>
             </div>
         </div>
-        <footer>&copy; 2026 CSEISLVT. Все права защищены.</footer>
+        <footer>&copy; 2026 CSEISLVT. Все права reserved.</footer>
     </div>
     <script>
         function copyServerIP(element) {
