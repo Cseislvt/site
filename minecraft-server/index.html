@@ -37,9 +37,33 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 10px;
             animation: fadeInUp 1.1s ease forwards;
         }
+
+        /* Иконка сервера + MOTD */
+        .server-top {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            width: 100%;
+        }
+        .server-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 8px;
+            image-rendering: pixelated;
+            border: 1px solid rgba(255,255,255,0.15);
+            flex-shrink: 0;
+        }
+        .motd {
+            font-size: 0.95rem;
+            color: #dddddd;
+            text-align: left;
+            text-shadow: 1px 1px 0 rgba(0,0,0,0.6);
+            word-break: break-word;
+        }
+
         .status-header {
             display: flex;
             align-items: center;
@@ -68,9 +92,43 @@
             color: #aaaaaa;
             font-size: 0.95rem;
         }
+
+        /* Список игроков */
+        .players-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            justify-content: center;
+            width: 100%;
+        }
+        .player-chip {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #dddddd;
+        }
+        .no-players {
+            font-size: 0.8rem;
+            color: #777777;
+            font-style: italic;
+        }
+
         .server-version {
             font-size: 0.85rem;
             color: #777777;
+        }
+        .server-info {
+            font-size: 0.8rem;
+            color: #666666;
+        }
+        .updated-info {
+            font-size: 0.75rem;
+            color: #555555;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            padding-top: 8px;
+            width: 100%;
         }
 
         .action-buttons { display: flex; flex-direction: column; gap: 20px; margin-top: 20px; animation: fadeInUp 1.2s ease forwards; }
@@ -92,14 +150,23 @@
 
         <!-- ДИНАМИЧЕСКИЙ БЛОК СТАТУСА -->
         <div class="status-card">
+            <div class="server-top">
+                <img id="serverIcon" class="server-icon" alt="Иконка сервера" hidden>
+                <div id="serverMotd" class="motd">Загрузка информации...</div>
+            </div>
+
             <div class="status-header">
                 <div id="statusDot" class="status-dot"></div>
                 <div class="status-text">
                     Статус: <span id="statusLabel">Проверка...</span>
                 </div>
             </div>
+
             <div id="playersCount" class="players-count"></div>
+            <div id="playersList" class="players-list"></div>
             <div id="serverVersion" class="server-version"></div>
+            <div id="serverInfo" class="server-info"></div>
+            <div id="updatedInfo" class="updated-info">Данные ещё не получены</div>
         </div>
 
         <div class="action-buttons">
@@ -114,6 +181,7 @@
 
     <script>
         const serverIP = 'mc.cseislvt.online';
+        let lastUpdated = null; // время последнего успешного/неуспешного обновления
 
         function copyServerIP(element) {
             navigator.clipboard.writeText(serverIP).then(() => {
@@ -123,12 +191,26 @@
             }).catch(err => { console.error('Ошибка копирования: ', err); });
         }
 
-        // ПРОВЕРКА СТАТУСА ЧЕРЕЗ API mcsrvstat.us (поддерживает CORS, работает на GitHub Pages)
+        // Экранирование HTML (чтобы ник игрока не сломал вёрстку)
+        function esc(s) {
+            return String(s).replace(/[&<>"']/g, c => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+            }[c]));
+        }
+
+        // ПРОВЕРКА СТАТУСА ЧЕРЕЗ API mcstatus.io
         async function checkServerStatus() {
-            const dot = document.getElementById('statusDot');
-            const label = document.getElementById('statusLabel');
-            const players = document.getElementById('playersCount');
-            const version = document.getElementById('serverVersion');
+            const dot         = document.getElementById('statusDot');
+            const label       = document.getElementById('statusLabel');
+            const players     = document.getElementById('playersCount');
+            const playersList = document.getElementById('playersList');
+            const version     = document.getElementById('serverVersion');
+            const info        = document.getElementById('serverInfo');
+            const icon        = document.getElementById('serverIcon');
+            const motd        = document.getElementById('serverMotd');
+            const updated     = document.getElementById('updatedInfo');
+
+            lastUpdated = Date.now();
 
             function setOffline() {
                 dot.className = 'status-dot offline';
@@ -136,41 +218,97 @@
                 label.style.color = '#e74c3c';
                 players.innerText = 'Сервер временно недоступен';
                 version.innerText = '';
+                info.innerText = '';
+                playersList.innerHTML = '';
+                icon.hidden = true;
+                motd.innerHTML = '<span style="color:#888">Нет данных</span>';
             }
 
             try {
-                // Правильный API-адрес с подстановкой IP
-                const response = await fetch(`https://api.mcsrvstat.us/3/${serverIP}`);
-                if (!response.ok) throw new Error('API error');
+                const response = await fetch(`https://api.mcstatus.io/v2/status/java/${serverIP}`);
+                if (!response.ok) throw new Error('HTTP error! status: ' + response.status);
 
                 const data = await response.json();
 
-                if (data && data.online === true) {
+                // MOTD (описание сервера, с цветами)
+                const motdHtml = data.motd?.html;
+                motd.innerHTML = (motdHtml && motdHtml.length)
+                    ? motdHtml.join('<br>')
+                    : '<span style="color:#888">MOTD не установлен</span>';
+
+                // Иконка сервера
+                if (data.icon) {
+                    icon.src = data.icon;
+                    icon.hidden = false;
+                } else {
+                    icon.hidden = true;
+                }
+
+                if (data.online === true) {
                     dot.className = 'status-dot online';
                     label.innerText = 'В СЕТИ';
                     label.style.color = '#2ecc71';
 
+                    // Игроки
                     const onlineNow = data.players?.online ?? 0;
                     const onlineMax = data.players?.max ?? 20;
                     players.innerText = `Игроки: ${onlineNow} / ${onlineMax}`;
 
-                    if (data.version?.name) {
-                        version.innerText = `Версия: ${data.version.name}`;
+                    // Список игроков онлайн
+                    const list = data.players?.list ?? [];
+                    if (list.length > 0) {
+                        playersList.innerHTML = list
+                            .map(p => `<span class="player-chip">${esc(p.name_clean)}</span>`)
+                            .join('');
+                    } else if (onlineNow > 0) {
+                        playersList.innerHTML = '<span class="no-players">Список игроков скрыт сервером</span>';
+                    } else {
+                        playersList.innerHTML = '<span class="no-players">Сейчас на сервере никого нет</span>';
+                    }
+
+                    // Версия + протокол
+                    if (data.version?.name_clean) {
+                        version.innerText = `Версия: ${data.version.name_clean} (протокол ${data.version.protocol ?? '?'})`;
                     } else {
                         version.innerText = '';
                     }
+
+                    // Доп. информация: реальный IP, порт, EULA
+                    const infoParts = [];
+                    if (data.ip_address) infoParts.push(`IP: ${data.ip_address}`);
+                    if (data.srv_record?.port && data.srv_record.port !== 25565) {
+                        infoParts.push(`Порт: ${data.srv_record.port}`);
+                    }
+                    if (data.eula_blocked) infoParts.push('⚠ Заблокирован по EULA');
+                    info.innerText = infoParts.join(' • ');
+
                 } else {
                     setOffline();
                 }
             } catch (error) {
-                console.error('Ошибка:', error);
+                console.error('Ошибка при запросе к API:', error);
                 setOffline();
             }
         }
 
+        // Живой таймер "сколько секунд назад обновились данные"
+        function updateUpdatedInfo() {
+            const updated = document.getElementById('updatedInfo');
+            if (!lastUpdated) {
+                updated.innerText = 'Данные ещё не получены';
+                return;
+            }
+            const sec = Math.floor((Date.now() - lastUpdated) / 1000);
+            const word = sec % 10 === 1 && sec % 100 !== 11 ? 'секунду'
+                       : [2,3,4].includes(sec % 10) && ![12,13,14].includes(sec % 100) ? 'секунды'
+                       : 'секунд';
+            updated.innerText = `Данные обновлены ${sec} ${word} назад • автообновление раз в минуту`;
+        }
+
         checkServerStatus();
-        // Автообновление статуса каждую минуту
-        setInterval(checkServerStatus, 60000);
+        updateUpdatedInfo();
+        setInterval(checkServerStatus, 60000); // обновление статуса каждую минуту
+        setInterval(updateUpdatedInfo, 1000);  // тикание таймера каждую секунду
     </script>
 </body>
 </html>
