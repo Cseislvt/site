@@ -25,7 +25,7 @@
         header h1 { font-size: 3rem; font-weight: 700; margin-bottom: 10px; background: linear-gradient(180deg, #fff 0%, #ddd 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 4px 10px rgba(0,0,0,0.5); }
         header p { color: #f0f0f0; font-size: 1.1rem; font-weight: 300; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
         
-        /* СТИЛИ ВИДЖЕТА СТАТУСА */
+        /* ДИНАМИЧЕСКИЙ ВИДЖЕТ СТАТУСА */
         .status-card {
             background: rgba(10, 10, 10, 0.8);
             backdrop-filter: blur(10px);
@@ -90,7 +90,7 @@
             <p>Собственный сервер с приватностью и white-list'ом.</p>
         </header>
 
-        <!-- БЛОК СТАТУСА СЕРВЕРА -->
+        <!-- ДИНАМИЧЕСКИЙ БЛОК СТАТУСА -->
         <div class="status-card">
             <div class="status-header">
                 <div id="statusDot" class="status-dot"></div>
@@ -103,7 +103,6 @@
         </div>
 
         <div class="action-buttons">
-            <!-- Кнопка копирования IP -->
             <div class="action-btn" onclick="copyServerIP(this)">
                 Скопировать IP сервера
                 <span class="btn-subtext">Нажми, чтобы скопировать: mc.cseislvt.online</span>
@@ -124,7 +123,7 @@
             }).catch(err => { console.error('Ошибка копирования: ', err); });
         }
 
-        // АБСОЛЮТНО РАБОЧИЙ МОНИТОРИНГ
+        // РАБОЧИЙ СКРИПТ ЧЕРЕЗ CORS-ПРОКСИ
         async function checkServerStatus() {
             const dot = document.getElementById('statusDot');
             const label = document.getElementById('statusLabel');
@@ -132,9 +131,9 @@
             const version = document.getElementById('serverVersion');
 
             try {
-                // Используем стабильный эндпоинт mcstatus.io без ограничений браузера
-                const response = await fetch(`https://mcstatus.io{serverIP}`);
-                if (!response.ok) throw new Error('Network error');
+                // Используем стабильный прокси, чтобы обойти сетевые затыки браузера
+                const response = await fetch(`https://herokuapp.com{serverIP}`);
+                if (!response.ok) throw new Error('Proxy error');
                 
                 const data = await response.json();
 
