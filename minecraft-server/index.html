@@ -78,6 +78,13 @@
             border-radius: 12px;
             margin-top: 10px;
             animation: fadeInUp 0.5s ease forwards;
+            max-height: 1000px; /* для анимации */
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease-out, margin 0.3s ease-out;
+        }
+        /* Класс для скрытия галереи */
+        .screenshots-gallery.hidden-gallery {
+            display: none; /* Гарантированно скрываем */
         }
         .screenshot-item {
             width: 100%;
@@ -177,7 +184,7 @@
         </div>
 
         <!-- БЛОК ГАЛЕРЕИ (изначально скрыт) -->
-        <div id="screenshotsGallery" class="screenshots-gallery" hidden></div>
+        <div id="screenshotsGallery" class="screenshots-gallery hidden-gallery"></div>
 
         <!-- ОКНО ПРОСМОТРА ФОТО -->
         <div id="lightbox" class="lightbox" onclick="closeLightbox()">
@@ -313,15 +320,18 @@
             const gallery = document.getElementById('screenshotsGallery');
             const subtext = document.getElementById('gallerySubtext');
             
-            if (gallery.hidden) {
-                gallery.hidden = false;
+            if (gallery.classList.contains('hidden-gallery')) {
+                // Открываем
+                gallery.classList.remove('hidden-gallery');
+                
                 if (!screenshotsLoaded) {
                     subtext.innerText = 'Загрузка скриншотов...';
                     await loadScreenshots();
                 }
                 subtext.innerText = 'Нажми, чтобы скрыть галерею';
             } else {
-                gallery.hidden = true;
+                // Закрываем
+                gallery.classList.add('hidden-gallery');
                 subtext.innerText = 'Нажми, чтобы посмотреть галерею';
             }
         }
@@ -344,7 +354,6 @@
                     return;
                 }
 
-                // Т.к. картинки лежат в той же папке, что и index.html, путь будет просто имя файла
                 gallery.innerHTML = images.map(img => 
                     `<img src="${img.name}" class="screenshot-item" onclick="openLightbox('${img.name}')" alt="Скриншот ${img.name}">`
                 ).join('');
