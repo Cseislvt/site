@@ -66,6 +66,30 @@
         .copy-toast { position: absolute; top: 15px; right: 20px; background: #ffffff; color: #000000; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; opacity: 0; transform: translateY(5px); transition: all 0.3s ease; pointer-events: none; }
         .copy-toast.show { opacity: 1; transform: translateY(0); }
         
+        /* БЛОК ОПИСАНИЯ */
+        .description-card {
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 10px;
+            text-align: left;
+            color: #dddddd;
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+        .description-card.hidden-desc { display: none; }
+        .description-card p { margin-bottom: 10px; }
+        .description-card p:last-child { margin-bottom: 0; }
+        .description-card a {
+            color: #4db5ff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .description-card a:hover { color: #80c8ff; text-decoration: underline; }
+
         /* ГАЛЕРЕЯ СКРИНШОТОВ */
         .screenshots-gallery {
             display: grid;
@@ -78,14 +102,11 @@
             border-radius: 12px;
             margin-top: 10px;
             animation: fadeInUp 0.5s ease forwards;
-            max-height: 1000px; /* для анимации */
+            max-height: 1000px;
             overflow: hidden;
             transition: max-height 0.3s ease-out, padding 0.3s ease-out, margin 0.3s ease-out;
         }
-        /* Класс для скрытия галереи */
-        .screenshots-gallery.hidden-gallery {
-            display: none; /* Гарантированно скрываем */
-        }
+        .screenshots-gallery.hidden-gallery { display: none; }
         .screenshot-item {
             width: 100%;
             aspect-ratio: 16/9;
@@ -176,11 +197,23 @@
                 <div class="copy-toast">IP скопирован!</div>
             </div>
             
+            <!-- КНОПКА ОПИСАНИЯ -->
+            <div class="action-btn" id="descriptionToggle" onclick="toggleDescription()">
+                ℹ️ Как попасть на сервер?
+                <span class="btn-subtext" id="descSubtext">Нажми, чтобы прочитать инструкцию</span>
+            </div>
+
             <!-- КНОПКА РАСКРЫТИЯ СКРИНШОТОВ -->
             <div class="action-btn" id="screenshotsToggle" onclick="toggleScreenshots()">
                 📸 Скриншоты с сервера
                 <span class="btn-subtext" id="gallerySubtext">Нажми, чтобы посмотреть галерею</span>
             </div>
+        </div>
+
+        <!-- БЛОК ОПИСАНИЯ -->
+        <div id="descriptionCard" class="description-card hidden-desc">
+            <p>Для подачи в вайт-лист, заходите в телеграм канал <strong>cseislvt</strong> (<a href="https://t.me/cseislvt" target="_blank">t.me/cseislvt</a>) чтобы оставить заявку.</p>
+            <p>В заявке укажите ник, который будет использоваться при подключении на сервер.</p>
         </div>
 
         <!-- БЛОК ГАЛЕРЕИ (изначально скрыт) -->
@@ -313,6 +346,20 @@
             updated.innerText = `Данные обновлены ${sec} ${word} назад • автообновление раз в минуту`;
         }
 
+        // ЛОГИКА ОПИСАНИЯ
+        function toggleDescription() {
+            const card = document.getElementById('descriptionCard');
+            const subtext = document.getElementById('descSubtext');
+            
+            if (card.classList.contains('hidden-desc')) {
+                card.classList.remove('hidden-desc');
+                subtext.innerText = 'Нажми, чтобы скрыть текст';
+            } else {
+                card.classList.add('hidden-desc');
+                subtext.innerText = 'Нажми, чтобы прочитать инструкцию';
+            }
+        }
+
         // ЛОГИКА ГАЛЕРЕИ И СКРИНШОТОВ
         let screenshotsLoaded = false;
 
@@ -321,7 +368,6 @@
             const subtext = document.getElementById('gallerySubtext');
             
             if (gallery.classList.contains('hidden-gallery')) {
-                // Открываем
                 gallery.classList.remove('hidden-gallery');
                 
                 if (!screenshotsLoaded) {
@@ -330,7 +376,6 @@
                 }
                 subtext.innerText = 'Нажми, чтобы скрыть галерею';
             } else {
-                // Закрываем
                 gallery.classList.add('hidden-gallery');
                 subtext.innerText = 'Нажми, чтобы посмотреть галерею';
             }
@@ -338,7 +383,6 @@
 
         async function loadScreenshots() {
             const gallery = document.getElementById('screenshotsGallery');
-            // Используем GitHub API для получения списка файлов в папке
             const repoApiUrl = 'https://api.github.com/repos/Cseislvt/site/contents/minecraft-server';
             
             try {
@@ -346,7 +390,6 @@
                 if (!response.ok) throw new Error('Не удалось получить список файлов');
                 
                 const files = await response.json();
-                // Фильтруем только картинки
                 const images = files.filter(f => f.name.match(/\.(png|jpg|jpeg|gif)$/i));
                 
                 if (images.length === 0) {
