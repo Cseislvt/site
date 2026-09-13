@@ -3,7 +3,7 @@ name: Update MC Server Status
 on:
   schedule:
     - cron: '*/5 * * * *' # Каждые 5 минут
-  workflow_dispatch: # Чтобы можно было запустить вручную
+  workflow_dispatch: # Ручной запуск
 
 permissions:
   contents: write # Разрешаем коммитить файл
@@ -15,20 +15,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Fetch status from API
-        run: |
-          curl -s -L "https://api.mcsrvstat.us/3/mc.cseislvt.online" -o status.json
-          python3 -c "
-          import json, time
-          try:
-              with open('status.json', 'r') as f:
-                  data = json.load(f)
-              data['updated_at'] = int(time.time() * 1000)
-          except Exception:
-              data = {'online': False, 'updated_at': int(time.time() * 1000)}
-          with open('status.json', 'w') as f:
-              json.dump(data, f, indent=2)
-          "
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install minecraft-server-util
+
+      - name: Ping server and update status.json
+        run: node scripts/update-status.js
+        env:
+          MC_HOST: mc.cseislvt.online
+          MC_PORT: '25565'
 
       - name: Commit changes
         run: |
