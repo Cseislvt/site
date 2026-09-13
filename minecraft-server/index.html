@@ -25,7 +25,6 @@
         header h1 { font-size: 3rem; font-weight: 700; margin-bottom: 10px; background: linear-gradient(180deg, #fff 0%, #ddd 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 4px 10px rgba(0,0,0,0.5); }
         header p { color: #f0f0f0; font-size: 1.1rem; font-weight: 300; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
         
-        /* ДИНАМИЧЕСКИЙ ВИДЖЕТ СТАТУСА */
         .status-card {
             background: rgba(10, 10, 10, 0.8);
             backdrop-filter: blur(10px);
@@ -41,7 +40,6 @@
             animation: fadeInUp 1.1s ease forwards;
         }
 
-        /* Иконка сервера + MOTD */
         .server-top {
             display: flex;
             align-items: center;
@@ -93,7 +91,6 @@
             font-size: 0.95rem;
         }
 
-        /* Список игроков */
         .players-list {
             display: flex;
             flex-wrap: wrap;
@@ -181,7 +178,8 @@
 
     <script>
         const serverIP = 'mc.cseislvt.online';
-        const apiUrl = 'https://obsidian-mc.ru/api/monitoring/v1/servers/VPl1GpA6eO/status/mc.cseislvt.online';
+        // Запрашиваем локальный файл, который обновляется GitHub Actions
+        const apiUrl = './status.json'; 
         let lastUpdated = null; 
 
         function copyServerIP(element) {
@@ -192,14 +190,13 @@
             }).catch(err => { console.error('Ошибка копирования: ', err); });
         }
 
-        // Экранирование HTML (чтобы ник игрока не сломал вёрстку)
+        // Экранирование HTML
         function esc(s) {
             return String(s).replace(/[&<>"']/g, c => ({
                 '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
             }[c]));
         }
 
-        // ПРОВЕРКА СТАТУСА ЧЕРЕЗ API OBSIDIAN-MC.RU
         async function checkServerStatus() {
             const dot         = document.getElementById('statusDot');
             const label       = document.getElementById('statusLabel');
@@ -210,8 +207,6 @@
             const icon        = document.getElementById('serverIcon');
             const motd        = document.getElementById('serverMotd');
             const updated     = document.getElementById('updatedInfo');
-
-            lastUpdated = Date.now();
 
             function setOffline() {
                 dot.className = 'status-dot offline';
@@ -226,35 +221,30 @@
             }
 
             try {
-                const response = await fetch(apiUrl);
+                // Добавляем cache: 'no-cache', чтобы браузер всегда брал свежий файл
+                const response = await fetch(apiUrl, { cache: 'no-cache' });
                 if (!response.ok) throw new Error('HTTP error! status: ' + response.status);
 
                 const data = await response.json();
 
-                // Универсальный парсер.
-                const isOnline = data.online === true || data.status === true || data.status === 'online' || data.online === 'online';
+                // Время обновления из самого файла
+                lastUpdated = data.updated_at || Date.now();
+                const isOnline = data.online === true;
                 
-                // MOTD (Описание) - безопасное извлечение
+                // MOTD
                 let motdHtml = '';
-                try {
-                    if (data.motd) {
-                        if (typeof data.motd === 'string') {
-                            motdHtml = data.motd.replace(/\n/g, '<br>');
-                        } else if (Array.isArray(data.motd)) {
-                            motdHtml = data.motd.join('<br>');
-                        } else if (data.motd.html && Array.isArray(data.motd.html)) {
-                            motdHtml = data.motd.html.join('<br>');
-                        } else if (data.motd.clean && Array.isArray(data.motd.clean)) {
-                            motdHtml = data.motd.clean.join('<br>');
-                        }
+                if (isOnline && data.motd) {
+                    if (data.motd.html && Array.isArray(data.motd.html)) {
+                        motdHtml = data.motd.html.join('<br>');
+                    } else if (data.motd.clean && Array.isArray(data.motd.clean)) {
+                        motdHtml = data.motd.clean.map(esc).join('<br>');
                     }
-                } catch (e) { console.warn('Ошибка парсинга MOTD:', e); }
-                
+                }
                 motd.innerHTML = motdHtml || '<span style="color:#888">MOTD не установлен</span>';
 
-                // Иконка сервера
-                const iconSrc = data.icon || data.favicon;
-                if (iconSrc) {
+                // Иконка
+                const iconSrc = data.icon;
+                if (isOnline && iconSrc) {
                     icon.src = iconSrc;
                     icon.hidden = false;
                 } else {
@@ -267,22 +257,12 @@
                     label.style.color = '#2ecc71';
 
                     // Игроки
-                    let onlineNow = 0;
-                    let onlineMax = 0;
-                    
-                    if (typeof data.players === 'number') onlineNow = data.players;
-                    else if (data.players?.online !== undefined) onlineNow = data.players.online;
-                    else if (data.players_online !== undefined) onlineNow = data.players_online;
-
-                    if (typeof data.max_players === 'number') onlineMax = data.max_players;
-                    else if (data.players?.max !== undefined) onlineMax = data.players.max;
-                    else if (data.players_max !== undefined) onlineMax = data.players_max;
-                    else onlineMax = 20; // дефолт
-
+                    const onlineNow = data.players?.online || 0;
+                    const onlineMax = data.players?.max || 20;
                     players.innerText = `Игроки: ${onlineNow} / ${onlineMax}`;
 
-                    // Список игроков (если API его отдает)
-                    const list = data.players?.list || data.players_list || [];
+                    // Список игроков
+                    const list = data.players?.list || [];
                     if (list.length > 0) {
                         playersList.innerHTML = list
                             .map(p => `<span class="player-chip">${esc(p.name_clean || p.name || p)}</span>`)
@@ -300,20 +280,17 @@
                     else if (data.version?.name) versionStr = data.version.name;
                     
                     version.innerText = versionStr ? `Версия: ${versionStr}` : '';
-
-                    // Доп. информация
                     info.innerText = '';
-
                 } else {
                     setOffline();
                 }
             } catch (error) {
-                console.error('Ошибка при запросе к API:', error);
+                console.error('Ошибка при загрузке статуса:', error);
                 setOffline();
             }
         }
 
-        // Живой таймер "сколько секунд назад обновились данные"
+        // Живой таймер
         function updateUpdatedInfo() {
             const updated = document.getElementById('updatedInfo');
             if (!lastUpdated) {
@@ -329,8 +306,8 @@
 
         checkServerStatus();
         updateUpdatedInfo();
-        setInterval(checkServerStatus, 60000); // обновление статуса каждую минуту
-        setInterval(updateUpdatedInfo, 1000);  // тикание таймера каждую секунду
+        setInterval(checkServerStatus, 60000); // Проверка раз в минуту
+        setInterval(updateUpdatedInfo, 1000);  // Тикание таймера
     </script>
 </body>
 </html>
