@@ -17,19 +17,17 @@ async function main() {
   };
 
   try {
-    // Прямой пинг сервера по протоколу Minecraft
     const data = await status(HOST, PORT, { timeout: 5000 });
 
     result.online = true;
     result.players.online = data.players?.online ?? 0;
     result.players.max = data.players?.max ?? 20;
 
-    // Список игроков (если сервер отдаёт)
+    // Сохраняем список игроков (объекты целиком)
     if (Array.isArray(data.players?.sample)) {
-      result.players.list = data.players.sample.map(p => p.name).filter(Boolean);
+      result.players.list = data.players.sample;
     }
 
-    // MOTD
     const motd = data.motd;
     if (motd) {
       if (typeof motd === 'string') {
@@ -43,12 +41,10 @@ async function main() {
       }
     }
 
-    // Версия
     if (data.version) {
       result.version = data.version.name || '';
     }
 
-    // Иконка
     if (data.favicon) {
       result.icon = data.favicon;
     }
