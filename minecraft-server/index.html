@@ -178,8 +178,8 @@
 
     <script>
         const serverIP = 'mc.cseislvt.online';
-        // Запрашиваем локальный файл, который обновляется GitHub Actions
-        const apiUrl = './status.json'; 
+        // ИСПРАВЛЕНО: убрали точку, теперь путь абсолютный от корня сайта
+        const apiUrl = '/status.json'; 
         let lastUpdated = null; 
 
         function copyServerIP(element) {
