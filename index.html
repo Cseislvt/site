@@ -50,6 +50,7 @@
         /* СТРАНИЦА */
 
         .page {
+            position: relative;
             min-height: 100vh;
             width: 100%;
             display: flex;
@@ -80,7 +81,8 @@
 
         .carousel {
             position: relative;
-            z-index: 5;
+            z-index: 10;
+            isolation: isolate;
             width: min(1100px, 100%);
             display: flex;
             align-items: center;
@@ -89,15 +91,19 @@
         }
 
         .carousel-window {
+            position: relative;
             flex: 1;
             min-width: 0;
+
             overflow-x: clip;
             overflow-y: visible;
-            padding: 25px 5px 90px;
-            margin-bottom: -90px;
+
+            padding: 35px 5px 100px;
+            margin-bottom: -100px;
         }
 
         .cards-track {
+            position: relative;
             display: flex;
             align-items: flex-start;
             width: max-content;
@@ -110,83 +116,107 @@
         .card {
             position: relative;
             z-index: 1;
-        
+
             flex: 0 0 155px;
             width: 155px;
             height: 175px;
-        
+
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
             gap: 12px;
-        
+
             padding: 16px 12px;
             border-radius: 18px;
-        
+
             text-decoration: none;
             color: white;
-        
-            background: rgba(25, 20, 48, 0.72);
+
+            background: rgba(25, 20, 48, 0.78);
             border: 1px solid rgba(255, 255, 255, 0.2);
-        
+
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-        
+
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
-        
+
             overflow: visible;
-        
-            transform-origin: center center;
-        
+
+            transform: scale(1);
+            transform-origin: center top;
+
             transition:
                 transform 0.3s ease,
                 background 0.3s ease,
                 border-color 0.3s ease,
                 box-shadow 0.3s ease;
         }
-        
+
         .card:hover {
-            z-index: 20;
+            z-index: 100;
             transform: scale(1.12);
-        
+
             background: rgba(55, 42, 95, 0.98);
             border-color: rgba(255, 255, 255, 0.65);
-        
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.55);
         }
-        
+
+        .card img {
+            flex: 0 0 auto;
+            width: 85px;
+            height: 85px;
+            object-fit: contain;
+            border-radius: 12px;
+
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover img {
+            transform: scale(1.08);
+        }
+
+        .card-title {
+            font-size: 14px;
+            font-weight: bold;
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        /* ОПИСАНИЕ */
+
         .card-description {
             position: absolute;
-            top: calc(100% + 5px);
+            top: calc(100% + 8px);
             left: -1px;
-        
+
             width: calc(100% + 2px);
             padding: 12px 10px;
-        
+
             border-radius: 12px;
-        
+
             background: rgba(35, 25, 65, 0.98);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        
+            border: 1px solid rgba(255, 255, 255, 0.35);
+
             font-size: 11px;
-            line-height: 1.45;
+            line-height: 1.5;
             text-align: center;
-            color: rgba(255, 255, 255, 0.9);
-        
+            color: rgba(255, 255, 255, 0.95);
+
             opacity: 0;
             visibility: hidden;
-        
+
             transform: translateY(8px);
-        
+
             transition:
                 opacity 0.25s ease,
                 transform 0.25s ease,
                 visibility 0.25s ease;
-        
+
             pointer-events: none;
         }
-        
+
         .card:hover .card-description {
             opacity: 1;
             visibility: visible;
@@ -196,6 +226,9 @@
         /* СТРЕЛКИ */
 
         .arrow {
+            position: relative;
+            z-index: 20;
+
             flex: 0 0 42px;
             width: 42px;
             height: 42px;
@@ -204,7 +237,7 @@
             border-radius: 50%;
 
             color: white;
-            background: rgba(20, 15, 40, 0.75);
+            background: rgba(20, 15, 40, 0.85);
 
             font-size: 23px;
             cursor: pointer;
@@ -224,6 +257,7 @@
         .radio {
             position: relative;
             z-index: 1;
+
             width: min(700px, 100%);
             padding: 22px;
             border-radius: 22px;
@@ -263,9 +297,27 @@
             border: none;
         }
 
+        /* ПОДВАЛ */
+
+        .footer {
+            position: relative;
+            z-index: 1;
+
+            width: 100%;
+            margin-top: 45px;
+            padding: 20px 10px;
+
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 13px;
+
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+        }
+
         /* ТЕЛЕФОНЫ */
 
         @media (max-width: 760px) {
+
             .page {
                 padding: 45px 18px 35px;
             }
@@ -299,6 +351,7 @@
                 display: grid;
                 grid-template-columns: repeat(2, minmax(0, 1fr));
                 gap: 13px;
+
                 transform: none !important;
             }
 
@@ -307,33 +360,36 @@
                 height: auto;
                 min-height: 220px;
                 flex: initial;
+
                 overflow: visible;
                 gap: 10px;
+
+                transform: none;
             }
 
             .card:hover {
                 height: auto;
                 transform: none;
             }
-            
-            .card-description {
-                position: static;
-                width: 100%;
-                padding: 0;
-            
-                background: transparent;
-                border: none;
-            
-                opacity: 1;
-                visibility: visible;
-                transform: none;
-            
-                pointer-events: auto;
-            }
 
             .card img {
                 width: 72px;
                 height: 72px;
+            }
+
+            .card-description {
+                position: static;
+                width: 100%;
+                padding: 0;
+
+                background: transparent;
+                border: none;
+
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+
+                pointer-events: auto;
             }
 
             .arrow {
@@ -354,23 +410,14 @@
                 grid-template-columns: 1fr;
             }
         }
-        /* ПОДВАЛ САЙТА */
 
-.footer {
-    width: 100%;
-    margin-top: 45px;
-    padding: 20px 10px;
-    text-align: center;
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 13px;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
-}
     </style>
 </head>
 
 <body>
 
     <!-- ВИДЕОФОН -->
+
     <video id="video-background" autoplay muted loop playsinline>
         <source src="frutiger_csei2.mp4" type="video/mp4">
     </video>
@@ -378,12 +425,14 @@
     <main class="page">
 
         <!-- ЗАГОЛОВОК -->
+
         <header class="header">
             <h1>CSEISLVT</h1>
             <p>Лазанья стала еще вкусней, вместо мяса некоарк кот.</p>
         </header>
 
-        <!-- КАРТОЧКИ -->
+        <!-- КАРУСЕЛЬ -->
+
         <section class="carousel">
 
             <button class="arrow" id="left-arrow" aria-label="Назад">‹</button>
@@ -397,6 +446,7 @@
         </section>
 
         <!-- LOFI RADIO -->
+
         <section class="radio">
             <h2>☁ Lofi Radio</h2>
             <p>Музыка для отдыха, работы и расслабления</p>
@@ -410,10 +460,13 @@
                 </iframe>
             </div>
         </section>
-    <footer class="footer">
-        © 2026 CSEISLVT. Все права защищены.
-    </footer>
-        
+
+        <!-- ПОДВАЛ -->
+
+        <footer class="footer">
+            © 2026 CSEISLVT. Все права защищены.
+        </footer>
+
     </main>
 
     <script>
@@ -511,12 +564,19 @@
                 track.appendChild(createCard(item));
             });
 
-            // Вторая группа — копия для бесконечного движения
+            // Вторая группа — копия для бесконечной ленты
             cards.forEach(item => {
                 track.appendChild(createCard(item));
             });
 
             requestAnimationFrame(() => {
+                if (window.innerWidth <= 760) {
+                    cycleWidth = 0;
+                    offset = 0;
+                    track.style.transform = "none";
+                    return;
+                }
+
                 const firstCard = track.children[0];
                 const nextGroup = track.children[cards.length];
 
@@ -541,7 +601,11 @@
             const delta = Math.min(time - lastTime, 40);
             lastTime = time;
 
-            if (!paused && window.innerWidth > 760 && cycleWidth > 0) {
+            if (
+                !paused &&
+                window.innerWidth > 760 &&
+                cycleWidth > 0
+            ) {
                 offset += speed * delta / 16;
                 updatePosition();
             }
@@ -550,6 +614,7 @@
         }
 
         // Остановка при наведении на ленту
+
         track.addEventListener("mouseenter", () => {
             paused = true;
         });
@@ -559,6 +624,7 @@
         });
 
         // Стрелка влево
+
         leftArrow.addEventListener("click", () => {
             if (cycleWidth <= 0) return;
 
@@ -567,6 +633,7 @@
         });
 
         // Стрелка вправо
+
         rightArrow.addEventListener("click", () => {
             if (cycleWidth <= 0) return;
 
@@ -575,12 +642,20 @@
         });
 
         // Пересчёт при изменении размера окна
+
+        let resizeTimer;
+
         window.addEventListener("resize", () => {
-            setupCarousel();
+            clearTimeout(resizeTimer);
+
+            resizeTimer = setTimeout(() => {
+                setupCarousel();
+            }, 150);
         });
 
         setupCarousel();
         requestAnimationFrame(animate);
+
     </script>
 
 </body>
