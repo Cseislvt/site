@@ -47,7 +47,7 @@
             pointer-events: none;
         }
 
-        /* ОСНОВНОЙ КОНТЕЙНЕР */
+        /* СТРАНИЦА */
 
         .page {
             min-height: 100vh;
@@ -73,11 +73,10 @@
 
         .header p {
             font-size: 17px;
-            letter-spacing: 0.5px;
             color: rgba(255, 255, 255, 0.95);
         }
 
-        /* КАРТОЧКИ */
+        /* КАРУСЕЛЬ */
 
         .carousel {
             width: min(1100px, 100%);
@@ -91,56 +90,106 @@
             flex: 1;
             min-width: 0;
             overflow: hidden;
-            padding: 12px 3px;
+            padding: 25px 5px 90px;
+            margin-bottom: -90px;
         }
 
         .cards-track {
             display: flex;
+            align-items: flex-start;
             width: max-content;
             gap: 18px;
             will-change: transform;
         }
 
+        /* КАРТОЧКА */
+
         .card {
-            flex: 0 0 145px;
-            height: 170px;
+            position: relative;
+            z-index: 1;
+            flex: 0 0 155px;
+            width: 155px;
+            min-height: 175px;
+            height: 175px;
+
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             gap: 12px;
-            padding: 12px;
+
+            padding: 16px 12px;
             border-radius: 18px;
             text-decoration: none;
             color: white;
-            background: rgba(25, 20, 48, 0.58);
+
+            background: rgba(25, 20, 48, 0.72);
             border: 1px solid rgba(255, 255, 255, 0.2);
+
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
+
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+
+            overflow: hidden;
+
             transition:
-                transform 0.25s ease,
-                background 0.25s ease,
-                border-color 0.25s ease;
+                height 0.3s ease,
+                transform 0.3s ease,
+                background 0.3s ease,
+                border-color 0.3s ease,
+                box-shadow 0.3s ease;
         }
 
         .card:hover {
-            transform: translateY(-7px) scale(1.04);
-            background: rgba(70, 55, 110, 0.72);
-            border-color: rgba(255, 255, 255, 0.55);
+            height: 285px;
+            transform: translateY(-8px) scale(1.06);
+            background: rgba(55, 42, 95, 0.94);
+            border-color: rgba(255, 255, 255, 0.65);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.45);
+            z-index: 10;
         }
 
         .card img {
-            width: 88px;
-            height: 88px;
+            flex: 0 0 auto;
+            width: 85px;
+            height: 85px;
             object-fit: contain;
             border-radius: 12px;
+            transition: transform 0.3s ease;
         }
 
-        .card span {
+        .card:hover img {
+            transform: scale(1.08);
+        }
+
+        .card-title {
             font-size: 14px;
             font-weight: bold;
             text-align: center;
+            line-height: 1.3;
+        }
+
+        /* ОПИСАНИЕ КАРТОЧКИ */
+
+        .card-description {
+            width: 100%;
+            font-size: 11px;
+            line-height: 1.45;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.85);
+
+            opacity: 0;
+            transform: translateY(8px);
+
+            transition:
+                opacity 0.3s ease,
+                transform 0.3s ease;
+        }
+
+        .card:hover .card-description {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         /* СТРЕЛКИ */
@@ -149,18 +198,24 @@
             flex: 0 0 42px;
             width: 42px;
             height: 42px;
+
             border: 1px solid rgba(255, 255, 255, 0.35);
             border-radius: 50%;
+
             color: white;
-            background: rgba(20, 15, 40, 0.65);
+            background: rgba(20, 15, 40, 0.75);
+
             font-size: 23px;
             cursor: pointer;
-            transition: background 0.2s, transform 0.2s;
+
+            transition:
+                background 0.2s,
+                transform 0.2s;
         }
 
         .arrow:hover {
-            background: rgba(100, 75, 160, 0.85);
-            transform: scale(1.1);
+            background: rgba(100, 75, 160, 0.9);
+            transform: scale(1.12);
         }
 
         /* РАДИО */
@@ -169,10 +224,13 @@
             width: min(700px, 100%);
             padding: 22px;
             border-radius: 22px;
+
             background: rgba(20, 15, 40, 0.68);
             border: 1px solid rgba(255, 255, 255, 0.22);
+
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
+
             box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
             text-align: center;
         }
@@ -202,7 +260,7 @@
             border: none;
         }
 
-        /* МОБИЛЬНАЯ ВЕРСИЯ */
+        /* ТЕЛЕФОНЫ */
 
         @media (max-width: 760px) {
             .page {
@@ -230,6 +288,7 @@
             .carousel-window {
                 overflow: visible;
                 padding: 0;
+                margin: 0;
             }
 
             .cards-track {
@@ -242,13 +301,27 @@
 
             .card {
                 width: 100%;
-                height: 145px;
+                height: auto;
+                min-height: 220px;
                 flex: initial;
+                overflow: visible;
+                gap: 10px;
+            }
+
+            .card:hover {
+                height: auto;
+                transform: none;
             }
 
             .card img {
                 width: 72px;
                 height: 72px;
+            }
+
+            .card-description {
+                opacity: 1;
+                transform: none;
+                font-size: 11px;
             }
 
             .arrow {
@@ -293,44 +366,7 @@
             <button class="arrow" id="left-arrow" aria-label="Назад">‹</button>
 
             <div class="carousel-window" id="carousel-window">
-                <div class="cards-track" id="cards-track">
-
-                    <a class="card" href="https://youtube.com/@cseislvt" target="_blank" rel="noopener noreferrer">
-                        <img src="youtube.jpg" alt="YouTube">
-                        <span>YouTube</span>
-                    </a>
-
-                    <a class="card" href="https://www.youtube.com/@cseislvtVOD" target="_blank" rel="noopener noreferrer">
-                        <img src="cseislvtVOD.png" alt="Архив стримов">
-                        <span>Архив стримов</span>
-                    </a>
-
-                    <a class="card" href="/minecraft-server">
-                        <img src="minecraft.png" alt="Minecraft">
-                        <span>Minecraft</span>
-                    </a>
-
-                    <a class="card" href="https://www.tiktok.com/@cseislvt" target="_blank" rel="noopener noreferrer">
-                        <img src="tiktok.png" alt="TikTok">
-                        <span>TikTok</span>
-                    </a>
-
-                    <a class="card" href="https://t.me/cseislvt" target="_blank" rel="noopener noreferrer">
-                        <img src="telegram%20cseislvt.png" alt="Telegram">
-                        <span>Telegram</span>
-                    </a>
-
-                    <a class="card" href="https://discord.gg/cxBkhgMDf5" target="_blank" rel="noopener noreferrer">
-                        <img src="discord.png" alt="Discord">
-                        <span>Discord</span>
-                    </a>
-
-                    <a class="card" href="https://cseislvt.itch.io/chponk" target="_blank" rel="noopener noreferrer">
-                        <img src="chponk.jpg" alt="CHPONK">
-                        <span>CHPONK!</span>
-                    </a>
-
-                </div>
+                <div class="cards-track" id="cards-track"></div>
             </div>
 
             <button class="arrow" id="right-arrow" aria-label="Вперёд">›</button>
@@ -355,88 +391,122 @@
     </main>
 
     <script>
-        const windowElement = document.getElementById("carousel-window");
         const track = document.getElementById("cards-track");
         const leftArrow = document.getElementById("left-arrow");
         const rightArrow = document.getElementById("right-arrow");
 
         const speed = 0.45;
 
-        let animationFrame;
+        let offset = 0;
+        let cycleWidth = 0;
         let lastTime = 0;
         let paused = false;
 
-        // Дублируем карточки для бесконечной ленты на ПК.
+        const cards = [
+            {
+                url: "https://youtube.com/@cseislvt",
+                image: "youtube.jpg",
+                title: "YouTube",
+                description: "Официальный канал проекта. Видео, стримы и бэкстейдж разработки."
+            },
+            {
+                url: "https://www.youtube.com/@cseislvtVOD",
+                image: "cseislvtVOD.png",
+                title: "Архив стримов",
+                description: "Архивные записи прошедших Twitch-стримов. Полные трансляции, игровые моменты и воспоминания."
+            },
+            {
+                url: "/minecraft-server",
+                image: "minecraft.png",
+                title: "Minecraft",
+                description: "Собственный Minecraft сервер с акцентом на приватность, white-list и отсутствие доната. Нажми, чтобы узнать подробности."
+            },
+            {
+                url: "https://www.tiktok.com/@cseislvt",
+                image: "tiktok.png",
+                title: "TikTok",
+                description: "Короткие ролики, инсайды и забавные моменты из жизни cseislvt."
+            },
+            {
+                url: "https://t.me/cseislvt",
+                image: "telegram%20cseislvt.png",
+                title: "Telegram",
+                description: "Главный новостной хаб. Все важные анонсы и обсуждения комьюнити здесь."
+            },
+            {
+                url: "https://discord.gg/cxBkhgMDf5",
+                image: "discord.png",
+                title: "Discord",
+                description: "Присоединяйся к Discord-сообществу CSEISLVT."
+            },
+            {
+                url: "https://cseislvt.itch.io/chponk",
+                image: "chponk.jpg",
+                title: "CHPONK!",
+                description: "Мой игровой проект на платформе itch.io. Заходи и зацени геймплей."
+            }
+        ];
+
+        function createCard(item) {
+            const link = document.createElement("a");
+
+            link.className = "card";
+            link.href = item.url;
+
+            if (item.url.startsWith("http")) {
+                link.target = "_blank";
+                link.rel = "noopener noreferrer";
+            }
+
+            const img = document.createElement("img");
+            img.src = item.image;
+            img.alt = item.title;
+
+            const title = document.createElement("span");
+            title.className = "card-title";
+            title.textContent = item.title;
+
+            const description = document.createElement("span");
+            description.className = "card-description";
+            description.textContent = item.description;
+
+            link.appendChild(img);
+            link.appendChild(title);
+            link.appendChild(description);
+
+            return link;
+        }
+
         function setupCarousel() {
             track.innerHTML = "";
 
-            const cards = [
-                {
-                    url: "https://youtube.com/@cseislvt",
-                    image: "youtube.jpg",
-                    title: "YouTube"
-                },
-                {
-                    url: "https://www.youtube.com/@cseislvtVOD",
-                    image: "cseislvtVOD.png",
-                    title: "Архив стримов"
-                },
-                {
-                    url: "/minecraft-server",
-                    image: "minecraft.png",
-                    title: "Minecraft"
-                },
-                {
-                    url: "https://www.tiktok.com/@cseislvt",
-                    image: "tiktok.png",
-                    title: "TikTok"
-                },
-                {
-                    url: "https://t.me/cseislvt",
-                    image: "telegram%20cseislvt.png",
-                    title: "Telegram"
-                },
-                {
-                    url: "https://discord.gg/cxBkhgMDf5",
-                    image: "discord.png",
-                    title: "Discord"
-                },
-                {
-                    url: "https://cseislvt.itch.io/chponk",
-                    image: "chponk.jpg",
-                    title: "CHPONK!"
-                }
-            ];
+            // Первая группа карточек
+            cards.forEach(item => {
+                track.appendChild(createCard(item));
+            });
 
-            function createCard(item) {
-                const link = document.createElement("a");
-                link.className = "card";
-                link.href = item.url;
+            // Вторая группа — копия для бесконечного движения
+            cards.forEach(item => {
+                track.appendChild(createCard(item));
+            });
 
-                if (item.url.startsWith("http")) {
-                    link.target = "_blank";
-                    link.rel = "noopener noreferrer";
-                }
+            requestAnimationFrame(() => {
+                const firstCard = track.children[0];
+                const nextGroup = track.children[cards.length];
 
-                const img = document.createElement("img");
-                img.src = item.image;
-                img.alt = item.title;
+                cycleWidth = nextGroup.offsetLeft - firstCard.offsetLeft;
+                offset = 0;
 
-                const span = document.createElement("span");
-                span.textContent = item.title;
+                updatePosition();
+            });
+        }
 
-                link.appendChild(img);
-                link.appendChild(span);
+        function updatePosition() {
+            if (cycleWidth <= 0) return;
 
-                return link;
-            }
+            offset = ((offset % cycleWidth) + cycleWidth) % cycleWidth;
 
-            cards.forEach(item => track.appendChild(createCard(item)));
-
-            // Копии нужны только для десктопной бесконечной ленты.
-            if (window.innerWidth > 760) {
-                cards.forEach(item => track.appendChild(createCard(item)));
-            }
+            track.style.transform = `translate3d(${-offset}px, 0, 0)`;
         }
 
         function animate(time) {
@@ -445,64 +515,46 @@
             const delta = Math.min(time - lastTime, 40);
             lastTime = time;
 
-            if (!paused && window.innerWidth > 760) {
-                windowElement.scrollLeft += speed * delta / 16;
-
-                const halfWidth = track.scrollWidth / 2;
-
-                if (halfWidth > 0 && windowElement.scrollLeft >= halfWidth) {
-                    windowElement.scrollLeft -= halfWidth;
-                }
+            if (!paused && window.innerWidth > 760 && cycleWidth > 0) {
+                offset += speed * delta / 16;
+                updatePosition();
             }
 
-            animationFrame = requestAnimationFrame(animate);
+            requestAnimationFrame(animate);
         }
 
-        windowElement.addEventListener("mouseenter", () => {
+        // Остановка при наведении на ленту
+        track.addEventListener("mouseenter", () => {
             paused = true;
         });
 
-        windowElement.addEventListener("mouseleave", () => {
+        track.addEventListener("mouseleave", () => {
             paused = false;
         });
 
-        windowElement.addEventListener("focusin", () => {
-            paused = true;
-        });
-
-        windowElement.addEventListener("focusout", () => {
-            paused = false;
-        });
-
+        // Стрелка влево
         leftArrow.addEventListener("click", () => {
-            paused = true;
-            windowElement.scrollBy({
-                left: -300,
-                behavior: "smooth"
-            });
+            if (cycleWidth <= 0) return;
+
+            offset -= 300;
+            updatePosition();
         });
 
+        // Стрелка вправо
         rightArrow.addEventListener("click", () => {
-            paused = true;
-            windowElement.scrollBy({
-                left: 300,
-                behavior: "smooth"
-            });
+            if (cycleWidth <= 0) return;
+
+            offset += 300;
+            updatePosition();
         });
 
-        let resizeTimeout;
-
+        // Пересчёт при изменении размера окна
         window.addEventListener("resize", () => {
-            clearTimeout(resizeTimeout);
-
-            resizeTimeout = setTimeout(() => {
-                windowElement.scrollLeft = 0;
-                setupCarousel();
-            }, 150);
+            setupCarousel();
         });
 
         setupCarousel();
-        animationFrame = requestAnimationFrame(animate);
+        requestAnimationFrame(animate);
     </script>
 
 </body>
