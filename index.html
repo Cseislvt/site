@@ -4,279 +4,506 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="/favicon.png">
+    <meta name="theme-color" content="#171329">
     <title>CSEISLVT</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
 
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
         body {
-            background-color: #000000;
-            color: #ffffff;
-            overflow-x: hidden;
-            line-height: 1.6;
             min-height: 100vh;
+            font-family: Arial, sans-serif;
+            color: white;
+            background: #171329;
+            overflow-x: hidden;
         }
 
-        /* Фоновое видео */
+        /* ВИДЕОФОН */
+
         #video-background {
             position: fixed;
             inset: 0;
             width: 100%;
             height: 100%;
             object-fit: cover;
-            object-position: center;
             z-index: -2;
-            pointer-events: none;
         }
 
-        /* Затемнение поверх видео */
         body::before {
             content: "";
             position: fixed;
             inset: 0;
             background: linear-gradient(
-                rgba(0, 0, 0, 0.75),
-                rgba(0, 0, 0, 0.9)
+                180deg,
+                rgba(10, 8, 25, 0.25),
+                rgba(10, 8, 25, 0.48)
             );
             z-index: -1;
             pointer-events: none;
         }
 
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* ОСНОВНОЙ КОНТЕЙНЕР */
+
+        .page {
+            min-height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 65px 24px 50px;
         }
 
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 40px 20px;
-            position: relative;
-            z-index: 1;
-        }
-
-        header {
+        .header {
             text-align: center;
-            padding: 80px 0 20px 0;
-            animation: fadeInUp 1s ease forwards;
+            margin-bottom: 38px;
+            text-shadow: 0 3px 15px rgba(0, 0, 0, 0.65);
         }
 
-        header h1 {
-            font-size: 3.5rem;
-            font-weight: 700;
-            letter-spacing: -1px;
-            margin-bottom: 10px;
-            background: linear-gradient(180deg, #fff 0%, #888 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .header h1 {
+            font-size: clamp(42px, 7vw, 76px);
+            font-weight: 900;
+            letter-spacing: 7px;
+            margin-bottom: 12px;
         }
 
-        header p {
-            color: #cccccc;
-            font-size: 1.1rem;
-            font-weight: 300;
+        .header p {
+            font-size: 17px;
+            letter-spacing: 0.5px;
+            color: rgba(255, 255, 255, 0.95);
         }
 
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-            margin-top: 40px;
-            animation: fadeInUp 1.2s ease forwards;
+        /* КАРТОЧКИ */
+
+        .carousel {
+            width: min(1100px, 100%);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 42px;
         }
 
-        .card-link {
-            text-decoration: none;
-            color: inherit;
-            display: block;
-            cursor: pointer;
+        .carousel-window {
+            flex: 1;
+            min-width: 0;
+            overflow: hidden;
+            padding: 12px 3px;
+        }
+
+        .cards-track {
+            display: flex;
+            width: max-content;
+            gap: 18px;
+            will-change: transform;
         }
 
         .card {
-            background: rgba(10, 10, 10, 0.85);
-            backdrop-filter: blur(10px);
-            border: 1px solid #1a1a1a;
-            border-radius: 12px;
-            overflow: hidden;
-            height: 100%;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            position: relative;
-        }
-
-        .card-link:hover .card {
-            transform: translateY(-5px);
-            border-color: #333333;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-        }
-
-        .card-image-wrapper {
-            width: 100%;
-            height: 200px;
-            background: #111111;
-            overflow: hidden;
+            flex: 0 0 145px;
+            height: 170px;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 18px;
+            text-decoration: none;
+            color: white;
+            background: rgba(25, 20, 48, 0.58);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+            transition:
+                transform 0.25s ease,
+                background 0.25s ease,
+                border-color 0.25s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-7px) scale(1.04);
+            background: rgba(70, 55, 110, 0.72);
+            border-color: rgba(255, 255, 255, 0.55);
         }
 
         .card img {
+            width: 88px;
+            height: 88px;
+            object-fit: contain;
+            border-radius: 12px;
+        }
+
+        .card span {
+            font-size: 14px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        /* СТРЕЛКИ */
+
+        .arrow {
+            flex: 0 0 42px;
+            width: 42px;
+            height: 42px;
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            border-radius: 50%;
+            color: white;
+            background: rgba(20, 15, 40, 0.65);
+            font-size: 23px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .arrow:hover {
+            background: rgba(100, 75, 160, 0.85);
+            transform: scale(1.1);
+        }
+
+        /* РАДИО */
+
+        .radio {
+            width: min(700px, 100%);
+            padding: 22px;
+            border-radius: 22px;
+            background: rgba(20, 15, 40, 0.68);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .radio h2 {
+            font-size: 23px;
+            margin-bottom: 8px;
+        }
+
+        .radio p {
+            color: rgba(255, 255, 255, 0.75);
+            font-size: 14px;
+            margin-bottom: 18px;
+        }
+
+        .radio-embed {
+            width: 100%;
+            height: 460px;
+            overflow: hidden;
+            border-radius: 14px;
+            background: rgba(10, 8, 25, 0.8);
+        }
+
+        .radio-embed iframe {
             width: 100%;
             height: 100%;
-            object-fit: cover;
-            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            border: none;
         }
 
-        .card-link:hover .card img {
-            transform: scale(1.05);
+        /* МОБИЛЬНАЯ ВЕРСИЯ */
+
+        @media (max-width: 760px) {
+            .page {
+                padding: 45px 18px 35px;
+            }
+
+            .header {
+                margin-bottom: 28px;
+            }
+
+            .header h1 {
+                letter-spacing: 4px;
+            }
+
+            .header p {
+                font-size: 14px;
+            }
+
+            .carousel {
+                width: 100%;
+                display: block;
+                margin-bottom: 30px;
+            }
+
+            .carousel-window {
+                overflow: visible;
+                padding: 0;
+            }
+
+            .cards-track {
+                width: 100%;
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 13px;
+                transform: none !important;
+            }
+
+            .card {
+                width: 100%;
+                height: 145px;
+                flex: initial;
+            }
+
+            .card img {
+                width: 72px;
+                height: 72px;
+            }
+
+            .arrow {
+                display: none;
+            }
+
+            .radio {
+                padding: 16px;
+            }
+
+            .radio-embed {
+                height: 430px;
+            }
         }
 
-        .card-content {
-            padding: 25px;
-            position: relative;
-        }
-
-        .card-content h3 {
-            font-size: 1.3rem;
-            margin-bottom: 10px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .card-content p {
-            color: #999999;
-            font-size: 0.95rem;
-        }
-
-        footer {
-            text-align: center;
-            margin-top: 100px;
-            padding: 20px;
-            color: #666666;
-            font-size: 0.85rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        @media (max-width: 380px) {
+            .cards-track {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
+
 <body>
 
-    <!-- Фоновое видео без звука -->
+    <!-- ВИДЕОФОН -->
     <video id="video-background" autoplay muted loop playsinline>
         <source src="frutiger_csei2.mp4" type="video/mp4">
     </video>
 
-    <div class="container">
-        <header>
+    <main class="page">
+
+        <!-- ЗАГОЛОВОК -->
+        <header class="header">
             <h1>CSEISLVT</h1>
             <p>Лазанья стала еще вкусней, вместо мяса некоарк кот.</p>
         </header>
 
-        <div class="grid">
+        <!-- КАРТОЧКИ -->
+        <section class="carousel">
 
-            <!-- 1. YouTube -->
-            <a href="https://youtube.com/@cseislvt" target="_blank" class="card-link">
-                <div class="card">
-                    <div class="card-image-wrapper">
+            <button class="arrow" id="left-arrow" aria-label="Назад">‹</button>
+
+            <div class="carousel-window" id="carousel-window">
+                <div class="cards-track" id="cards-track">
+
+                    <a class="card" href="https://youtube.com/@cseislvt" target="_blank" rel="noopener noreferrer">
                         <img src="youtube.jpg" alt="YouTube">
-                    </div>
-                    <div class="card-content">
-                        <h3>YouTube</h3>
-                        <p>Официальный канал проекта. Видео, стримы и бэкстейдж разработки.</p>
-                    </div>
-                </div>
-            </a>
+                        <span>YouTube</span>
+                    </a>
 
-            <!-- 2. Архив стримов Twitch -->
-            <a href="https://www.youtube.com/@cseislvtVOD" target="_blank" rel="noopener noreferrer" class="card-link">
-                <div class="card">
-                    <div class="card-image-wrapper">
+                    <a class="card" href="https://www.youtube.com/@cseislvtVOD" target="_blank" rel="noopener noreferrer">
                         <img src="cseislvtVOD.png" alt="Архив стримов">
-                    </div>
-                    <div class="card-content">
-                        <h3>Архив стримов</h3>
-                        <p>Архивные записи прошедших Twitch-стримов. Полные трансляции, игровые моменты и воспоминания.</p>
-                    </div>
-                </div>
-            </a>
+                        <span>Архив стримов</span>
+                    </a>
 
-            <!-- 3. Сервер Minecraft -->
-            <a href="/minecraft-server" class="card-link">
-                <div class="card">
-                    <div class="card-image-wrapper">
+                    <a class="card" href="/minecraft-server">
                         <img src="minecraft.png" alt="Minecraft">
-                    </div>
-                    <div class="card-content">
-                        <h3>Сервер Minecraft</h3>
-                        <p>Собственный Minecraft сервер с акцентом на приватность, white-list и отсутствие доната. Нажми, чтобы узнать подробности.</p>
-                    </div>
-                </div>
-            </a>
+                        <span>Minecraft</span>
+                    </a>
 
-            <!-- 4. TikTok -->
-            <a href="https://www.tiktok.com/@cseislvt" target="_blank" class="card-link">
-                <div class="card">
-                    <div class="card-image-wrapper">
+                    <a class="card" href="https://www.tiktok.com/@cseislvt" target="_blank" rel="noopener noreferrer">
                         <img src="tiktok.png" alt="TikTok">
-                    </div>
-                    <div class="card-content">
-                        <h3>TikTok</h3>
-                        <p>Короткие ролики, инсайды и забавные моменты из жизни cseislvt.</p>
-                    </div>
-                </div>
-            </a>
+                        <span>TikTok</span>
+                    </a>
 
-            <!-- 5. Telegram -->
-            <a href="https://t.me/cseislvt" target="_blank" class="card-link">
-                <div class="card">
-                    <div class="card-image-wrapper">
+                    <a class="card" href="https://t.me/cseislvt" target="_blank" rel="noopener noreferrer">
                         <img src="telegram%20cseislvt.png" alt="Telegram">
-                    </div>
-                    <div class="card-content">
-                        <h3>Telegram</h3>
-                        <p>Главный новостной хаб. Все важные анонсы и обсуждения комьюнити здесь.</p>
-                    </div>
-                </div>
-            </a>
+                        <span>Telegram</span>
+                    </a>
 
-            <!-- 6. Discord -->
-            <a href="https://discord.gg/cxBkhgMDf5" target="_blank" rel="noopener noreferrer" class="card-link">
-                <div class="card">
-                    <div class="card-image-wrapper">
+                    <a class="card" href="https://discord.gg/cxBkhgMDf5" target="_blank" rel="noopener noreferrer">
                         <img src="discord.png" alt="Discord">
-                    </div>
-                    <div class="card-content">
-                        <h3>Discord</h3>
-                        <p>Присоединяйся к Discord-сообществу SLVT.</p>
-                    </div>
+                        <span>Discord</span>
+                    </a>
+
+                    <a class="card" href="https://cseislvt.itch.io/chponk" target="_blank" rel="noopener noreferrer">
+                        <img src="chponk.jpg" alt="CHPONK">
+                        <span>CHPONK!</span>
+                    </a>
+
                 </div>
-            </a>
+            </div>
 
-            <!-- 7. Игра CHPONK! на itch.io -->
-            <a href="https://cseislvt.itch.io/chponk" target="_blank" class="card-link">
-                <div class="card">
-                    <div class="card-image-wrapper">
-                        <img src="chponk.jpg" alt="CHPONK!">
-                    </div>
-                    <div class="card-content">
-                        <h3>Игра CHPONK!</h3>
-                        <p>Мой игровой проект на платформе itch.io. Заходи и зацени геймплей.</p>
-                    </div>
-                </div>
-            </a>
+            <button class="arrow" id="right-arrow" aria-label="Вперёд">›</button>
 
-        </div>
+        </section>
 
-        <footer>
-            &copy; 2026 CSEISLVT. Все права защищены. Что смотришь?
-        </footer>
-    </div>
+        <!-- LOFI RADIO -->
+        <section class="radio">
+            <h2>☁ Lofi Radio</h2>
+            <p>Музыка для отдыха, работы и расслабления</p>
+
+            <div class="radio-embed">
+                <iframe
+                    src="https://www.lofi.cafe/"
+                    title="Lofi Cafe Radio"
+                    allow="autoplay; encrypted-media; picture-in-picture"
+                    loading="lazy">
+                </iframe>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        const windowElement = document.getElementById("carousel-window");
+        const track = document.getElementById("cards-track");
+        const leftArrow = document.getElementById("left-arrow");
+        const rightArrow = document.getElementById("right-arrow");
+
+        const speed = 0.45;
+
+        let animationFrame;
+        let lastTime = 0;
+        let paused = false;
+
+        // Дублируем карточки для бесконечной ленты на ПК.
+        function setupCarousel() {
+            track.innerHTML = "";
+
+            const cards = [
+                {
+                    url: "https://youtube.com/@cseislvt",
+                    image: "youtube.jpg",
+                    title: "YouTube"
+                },
+                {
+                    url: "https://www.youtube.com/@cseislvtVOD",
+                    image: "cseislvtVOD.png",
+                    title: "Архив стримов"
+                },
+                {
+                    url: "/minecraft-server",
+                    image: "minecraft.png",
+                    title: "Minecraft"
+                },
+                {
+                    url: "https://www.tiktok.com/@cseislvt",
+                    image: "tiktok.png",
+                    title: "TikTok"
+                },
+                {
+                    url: "https://t.me/cseislvt",
+                    image: "telegram%20cseislvt.png",
+                    title: "Telegram"
+                },
+                {
+                    url: "https://discord.gg/cxBkhgMDf5",
+                    image: "discord.png",
+                    title: "Discord"
+                },
+                {
+                    url: "https://cseislvt.itch.io/chponk",
+                    image: "chponk.jpg",
+                    title: "CHPONK!"
+                }
+            ];
+
+            function createCard(item) {
+                const link = document.createElement("a");
+                link.className = "card";
+                link.href = item.url;
+
+                if (item.url.startsWith("http")) {
+                    link.target = "_blank";
+                    link.rel = "noopener noreferrer";
+                }
+
+                const img = document.createElement("img");
+                img.src = item.image;
+                img.alt = item.title;
+
+                const span = document.createElement("span");
+                span.textContent = item.title;
+
+                link.appendChild(img);
+                link.appendChild(span);
+
+                return link;
+            }
+
+            cards.forEach(item => track.appendChild(createCard(item)));
+
+            // Копии нужны только для десктопной бесконечной ленты.
+            if (window.innerWidth > 760) {
+                cards.forEach(item => track.appendChild(createCard(item)));
+            }
+        }
+
+        function animate(time) {
+            if (!lastTime) lastTime = time;
+
+            const delta = Math.min(time - lastTime, 40);
+            lastTime = time;
+
+            if (!paused && window.innerWidth > 760) {
+                windowElement.scrollLeft += speed * delta / 16;
+
+                const halfWidth = track.scrollWidth / 2;
+
+                if (halfWidth > 0 && windowElement.scrollLeft >= halfWidth) {
+                    windowElement.scrollLeft -= halfWidth;
+                }
+            }
+
+            animationFrame = requestAnimationFrame(animate);
+        }
+
+        windowElement.addEventListener("mouseenter", () => {
+            paused = true;
+        });
+
+        windowElement.addEventListener("mouseleave", () => {
+            paused = false;
+        });
+
+        windowElement.addEventListener("focusin", () => {
+            paused = true;
+        });
+
+        windowElement.addEventListener("focusout", () => {
+            paused = false;
+        });
+
+        leftArrow.addEventListener("click", () => {
+            paused = true;
+            windowElement.scrollBy({
+                left: -300,
+                behavior: "smooth"
+            });
+        });
+
+        rightArrow.addEventListener("click", () => {
+            paused = true;
+            windowElement.scrollBy({
+                left: 300,
+                behavior: "smooth"
+            });
+        });
+
+        let resizeTimeout;
+
+        window.addEventListener("resize", () => {
+            clearTimeout(resizeTimeout);
+
+            resizeTimeout = setTimeout(() => {
+                windowElement.scrollLeft = 0;
+                setupCarousel();
+            }, 150);
+        });
+
+        setupCarousel();
+        animationFrame = requestAnimationFrame(animate);
+    </script>
 
 </body>
 </html>
