@@ -155,23 +155,516 @@
     </div>
 
 
+
+<script>
+    // ГАЛЕРЕЯ СКРИНШОТОВ БЕЗ GITHUB API
+
+    const screenshotFiles = [
+        '2026-09-09_22.56.05.png',
+        '2026-09-11_22.59.37.png',
+        '2026-09-14_00.08.12.png',
+        '2026-09-14_01.33.15.png',
+        '2026-09-14_01.33.31.png',
+        '2026-09-14_01.33.48.png',
+        '2026-09-14_01.33.54.png',
+        '2026-09-14_01.34.04.png',
+        '2026-09-14_01.34.20.png',
+        '2026-09-14_01.34.55.png',
+        '2026-09-14_01.35.40.png',
+        '2026-09-14_01.35.58.png',
+        '2026-09-14_01.36.07.png',
+        '2026-09-14_01.36.20.png',
+        '2026-09-14_01.37.04.png',
+        '2026-09-14_01.37.14.png',
+        '2026-09-14_01.37.22.png'
+    ];
+
+    const screenshotBase =
+        'https://raw.githubusercontent.com/Cseislvt/site/main/minecraft-server/';
+
+    let screenshotsLoaded = false;
+
+    function toggleScreenshots() {
+        const gallery = document.getElementById('screenshotsGallery');
+        const subtext = document.getElementById('gallerySubtext');
+
+        if (gallery.classList.contains('hidden-gallery')) {
+            gallery.classList.remove('hidden-gallery');
+
+            if (!screenshotsLoaded) {
+                loadScreenshots();
+            } else {
+                subtext.innerText = 'Нажми, чтобы скрыть галерею';
+            }
+        } else {
+            gallery.classList.add('hidden-gallery');
+            subtext.innerText = 'Нажми, чтобы посмотреть галерею';
+        }
+    }
+
+    function loadScreenshots() {
+        const gallery = document.getElementById('screenshotsGallery');
+        const subtext = document.getElementById('gallerySubtext');
+
+        gallery.innerHTML = '';
+        subtext.innerText = 'Загрузка скриншотов...';
+
+        let loaded = 0;
+        let failed = 0;
+
+        screenshotFiles.forEach(filename => {
+            const image = document.createElement('img');
+
+            image.className = 'screenshot-item';
+            image.alt = filename;
+            image.loading = 'lazy';
+
+            const imageUrl = screenshotBase + encodeURIComponent(filename);
+
+            image.onload = () => {
+                loaded++;
+                updateStatus();
+            };
+
+            image.onerror = () => {
+                failed++;
+                image.alt = 'Ошибка загрузки: ' + filename;
+                image.style.opacity = '0.3';
+                updateStatus();
+            };
+
+            image.onclick = () => {
+                if (image.complete && image.naturalWidth > 0) {
+                    openLightbox(imageUrl);
+                }
+            };
+
+            image.src = imageUrl;
+            gallery.appendChild(image);
+        });
+
+        function updateStatus() {
+            if (loaded + failed === screenshotFiles.length) {
+                screenshotsLoaded = true;
+
+                subtext.innerText =
+                    `Загружено ${loaded} из ${screenshotFiles.length} скриншотов`;
+
+                if (failed > 0) {
+                    console.warn('Не удалось загрузить файлов:', failed);
+                }
+            }
+        }
+    }
+
+    function openLightbox(src) {
+        const lightbox = document.getElementById('lightbox');
+        const img = document.getElementById('lightboxImg');
+
+        img.src = src;
+        lightbox.classList.add('open');
+    }
+
+    function closeLightbox() {
+        const lightbox = document.getElementById('lightbox');
+        const img = document.getElementById('lightboxImg');
+
+        lightbox.classList.remove('open');
+        img.src = '';
+    }
+</script>
+
+<script>
+    // ГАЛЕРЕЯ СКРИНШОТОВ БЕЗ GITHUB API
+
+    const screenshotFiles = [
+        '2026-09-09_22.56.05.png',
+        '2026-09-11_22.59.37.png',
+        '2026-09-14_00.08.12.png',
+        '2026-09-14_01.33.15.png',
+        '2026-09-14_01.33.31.png',
+        '2026-09-14_01.33.48.png',
+        '2026-09-14_01.33.54.png',
+        '2026-09-14_01.34.04.png',
+        '2026-09-14_01.34.20.png',
+        '2026-09-14_01.34.55.png',
+        '2026-09-14_01.35.40.png',
+        '2026-09-14_01.35.58.png',
+        '2026-09-14_01.36.07.png',
+        '2026-09-14_01.36.20.png',
+        '2026-09-14_01.37.04.png',
+        '2026-09-14_01.37.14.png',
+        '2026-09-14_01.37.22.png'
+    ];
+
+    const screenshotBase =
+        'https://raw.githubusercontent.com/Cseislvt/site/main/minecraft-server/';
+
+    let screenshotsLoaded = false;
+
+    function toggleScreenshots() {
+        const gallery = document.getElementById('screenshotsGallery');
+        const subtext = document.getElementById('gallerySubtext');
+
+        if (gallery.classList.contains('hidden-gallery')) {
+            gallery.classList.remove('hidden-gallery');
+
+            if (!screenshotsLoaded) {
+                loadScreenshots();
+            } else {
+                subtext.innerText = 'Нажми, чтобы скрыть галерею';
+            }
+        } else {
+            gallery.classList.add('hidden-gallery');
+            subtext.innerText = 'Нажми, чтобы посмотреть галерею';
+        }
+    }
+
+    function loadScreenshots() {
+        const gallery = document.getElementById('screenshotsGallery');
+        const subtext = document.getElementById('gallerySubtext');
+
+        gallery.innerHTML = '';
+        subtext.innerText = 'Загрузка скриншотов...';
+
+        let loaded = 0;
+        let failed = 0;
+
+        screenshotFiles.forEach(filename => {
+            const image = document.createElement('img');
+
+            image.className = 'screenshot-item';
+            image.alt = filename;
+            image.loading = 'lazy';
+
+            const imageUrl = screenshotBase + encodeURIComponent(filename);
+
+            image.onload = () => {
+                loaded++;
+                updateStatus();
+            };
+
+            image.onerror = () => {
+                failed++;
+                image.alt = 'Ошибка загрузки: ' + filename;
+                image.style.opacity = '0.3';
+                updateStatus();
+            };
+
+            image.onclick = () => {
+                if (image.complete && image.naturalWidth > 0) {
+                    openLightbox(imageUrl);
+                }
+            };
+
+            image.src = imageUrl;
+            gallery.appendChild(image);
+        });
+
+        function updateStatus() {
+            if (loaded + failed === screenshotFiles.length) {
+                screenshotsLoaded = true;
+
+                subtext.innerText =
+                    `Загружено ${loaded} из ${screenshotFiles.length} скриншотов`;
+
+                if (failed > 0) {
+                    console.warn('Не удалось загрузить файлов:', failed);
+                }
+            }
+        }
+    }
+
+    function openLightbox(src) {
+        const lightbox = document.getElementById('lightbox');
+        const img = document.getElementById('lightboxImg');
+
+        img.src = src;
+        lightbox.classList.add('open');
+    }
+
+    function closeLightbox() {
+        const lightbox = document.getElementById('lightbox');
+        const img = document.getElementById('lightboxImg');
+
+        lightbox.classList.remove('open');
+        img.src = '';
+    }
+</script>
+
+<script>
+    // ГАЛЕРЕЯ СКРИНШОТОВ БЕЗ GITHUB API
+
+    const screenshotFiles = [
+        '2026-09-09_22.56.05.png',
+        '2026-09-11_22.59.37.png',
+        '2026-09-14_00.08.12.png',
+        '2026-09-14_01.33.15.png',
+        '2026-09-14_01.33.31.png',
+        '2026-09-14_01.33.48.png',
+        '2026-09-14_01.33.54.png',
+        '2026-09-14_01.34.04.png',
+        '2026-09-14_01.34.20.png',
+        '2026-09-14_01.34.55.png',
+        '2026-09-14_01.35.40.png',
+        '2026-09-14_01.35.58.png',
+        '2026-09-14_01.36.07.png',
+        '2026-09-14_01.36.20.png',
+        '2026-09-14_01.37.04.png',
+        '2026-09-14_01.37.14.png',
+        '2026-09-14_01.37.22.png'
+    ];
+
+    const screenshotBase =
+        'https://raw.githubusercontent.com/Cseislvt/site/main/minecraft-server/';
+
+    let screenshotsLoaded = false;
+
+    function toggleScreenshots() {
+        const gallery = document.getElementById('screenshotsGallery');
+        const subtext = document.getElementById('gallerySubtext');
+
+        if (gallery.classList.contains('hidden-gallery')) {
+            gallery.classList.remove('hidden-gallery');
+
+            if (!screenshotsLoaded) {
+                loadScreenshots();
+            } else {
+                subtext.innerText = 'Нажми, чтобы скрыть галерею';
+            }
+        } else {
+            gallery.classList.add('hidden-gallery');
+            subtext.innerText = 'Нажми, чтобы посмотреть галерею';
+        }
+    }
+
+    function loadScreenshots() {
+        const gallery = document.getElementById('screenshotsGallery');
+        const subtext = document.getElementById('gallerySubtext');
+
+        gallery.innerHTML = '';
+        subtext.innerText = 'Загрузка скриншотов...';
+
+        let loaded = 0;
+        let failed = 0;
+
+        screenshotFiles.forEach(filename => {
+            const image = document.createElement('img');
+
+            image.className = 'screenshot-item';
+            image.alt = filename;
+            image.loading = 'lazy';
+
+            const imageUrl = screenshotBase + encodeURIComponent(filename);
+
+            image.onload = () => {
+                loaded++;
+                updateStatus();
+            };
+
+            image.onerror = () => {
+                failed++;
+                image.alt = 'Ошибка загрузки: ' + filename;
+                image.style.opacity = '0.3';
+                updateStatus();
+            };
+
+            image.onclick = () => {
+                if (image.complete && image.naturalWidth > 0) {
+                    openLightbox(imageUrl);
+                }
+            };
+
+            image.src = imageUrl;
+            gallery.appendChild(image);
+        });
+
+        function updateStatus() {
+            if (loaded + failed === screenshotFiles.length) {
+                screenshotsLoaded = true;
+
+                subtext.innerText =
+                    `Загружено ${loaded} из ${screenshotFiles.length} скриншотов`;
+
+                if (failed > 0) {
+                    console.warn('Не удалось загрузить файлов:', failed);
+                }
+            }
+        }
+    }
+
+    function openLightbox(src) {
+        const lightbox = document.getElementById('lightbox');
+        const img = document.getElementById('lightboxImg');
+
+        img.src = src;
+        lightbox.classList.add('open');
+    }
+
+    function closeLightbox() {
+        const lightbox = document.getElementById('lightbox');
+        const img = document.getElementById('lightboxImg');
+
+        lightbox.classList.remove('open');
+        img.src = '';
+    }
+</script>
+
+<script>
+    // ГАЛЕРЕЯ СКРИНШОТОВ БЕЗ GITHUB API
+
+    const screenshotFiles = [
+        '2026-09-09_22.56.05.png',
+        '2026-09-11_22.59.37.png',
+        '2026-09-14_00.08.12.png',
+        '2026-09-14_01.33.15.png',
+        '2026-09-14_01.33.31.png',
+        '2026-09-14_01.33.48.png',
+        '2026-09-14_01.33.54.png',
+        '2026-09-14_01.34.04.png',
+        '2026-09-14_01.34.20.png',
+        '2026-09-14_01.34.55.png',
+        '2026-09-14_01.35.40.png',
+        '2026-09-14_01.35.58.png',
+        '2026-09-14_01.36.07.png',
+        '2026-09-14_01.36.20.png',
+        '2026-09-14_01.37.04.png',
+        '2026-09-14_01.37.14.png',
+        '2026-09-14_01.37.22.png'
+    ];
+
+    const screenshotBase =
+        'https://raw.githubusercontent.com/Cseislvt/site/main/minecraft-server/';
+
+    let screenshotsLoaded = false;
+
+    function toggleScreenshots() {
+        const gallery = document.getElementById('screenshotsGallery');
+        const subtext = document.getElementById('gallerySubtext');
+
+        if (gallery.classList.contains('hidden-gallery')) {
+            gallery.classList.remove('hidden-gallery');
+
+            if (!screenshotsLoaded) {
+                loadScreenshots();
+            } else {
+                subtext.innerText = 'Нажми, чтобы скрыть галерею';
+            }
+        } else {
+            gallery.classList.add('hidden-gallery');
+            subtext.innerText = 'Нажми, чтобы посмотреть галерею';
+        }
+    }
+
+    function loadScreenshots() {
+        const gallery = document.getElementById('screenshotsGallery');
+        const subtext = document.getElementById('gallerySubtext');
+
+        gallery.innerHTML = '';
+        subtext.innerText = 'Загрузка скриншотов...';
+
+        let loaded = 0;
+        let failed = 0;
+
+        screenshotFiles.forEach(filename => {
+            const image = document.createElement('img');
+
+            image.className = 'screenshot-item';
+            image.alt = filename;
+            image.loading = 'lazy';
+
+            const imageUrl = screenshotBase + encodeURIComponent(filename);
+
+            image.onload = () => {
+                loaded++;
+                updateStatus();
+            };
+
+            image.onerror = () => {
+                failed++;
+                image.alt = 'Ошибка загрузки: ' + filename;
+                image.style.opacity = '0.3';
+                updateStatus();
+            };
+
+            image.onclick = () => {
+                if (image.complete && image.naturalWidth > 0) {
+                    openLightbox(imageUrl);
+                }
+            };
+
+            image.src = imageUrl;
+            gallery.appendChild(image);
+        });
+
+        function updateStatus() {
+            if (loaded + failed === screenshotFiles.length) {
+                screenshotsLoaded = true;
+
+                subtext.innerText =
+                    `Загружено ${loaded} из ${screenshotFiles.length} скриншотов`;
+
+                if (failed > 0) {
+                    console.warn('Не удалось загрузить файлов:', failed);
+                }
+            }
+        }
+    }
+
+    function openLightbox(src) {
+        const lightbox = document.getElementById('lightbox');
+        const img = document.getElementById('lightboxImg');
+
+        img.src = src;
+        lightbox.classList.add('open');
+    }
+
+    function closeLightbox() {
+        const lightbox = document.getElementById('lightbox');
+        const img = document.getElementById('lightboxImg');
+
+        lightbox.classList.remove('open');
+        img.src = '';
+    }
+</script>
     <script>
-        // ЛОГИКА ГАЛЕРЕИ И СКРИНШОТОВ
+        // ГАЛЕРЕЯ СКРИНШОТОВ БЕЗ GITHUB API
+    
+        const screenshotFiles = [
+            '2026-09-09_22.56.05.png',
+            '2026-09-11_22.59.37.png',
+            '2026-09-14_00.08.12.png',
+            '2026-09-14_01.33.15.png',
+            '2026-09-14_01.33.31.png',
+            '2026-09-14_01.33.48.png',
+            '2026-09-14_01.33.54.png',
+            '2026-09-14_01.34.04.png',
+            '2026-09-14_01.34.20.png',
+            '2026-09-14_01.34.55.png',
+            '2026-09-14_01.35.40.png',
+            '2026-09-14_01.35.58.png',
+            '2026-09-14_01.36.07.png',
+            '2026-09-14_01.36.20.png',
+            '2026-09-14_01.37.04.png',
+            '2026-09-14_01.37.14.png',
+            '2026-09-14_01.37.22.png'
+        ];
+    
+        const screenshotBase =
+            'https://raw.githubusercontent.com/Cseislvt/site/main/minecraft-server/';
     
         let screenshotsLoaded = false;
-        let screenshotsLoading = false;
     
-        async function toggleScreenshots() {
+        function toggleScreenshots() {
             const gallery = document.getElementById('screenshotsGallery');
             const subtext = document.getElementById('gallerySubtext');
     
             if (gallery.classList.contains('hidden-gallery')) {
                 gallery.classList.remove('hidden-gallery');
     
-                if (!screenshotsLoaded && !screenshotsLoading) {
-                    subtext.innerText = 'Загрузка скриншотов...';
-                    await loadScreenshots();
-                } else if (screenshotsLoaded) {
+                if (!screenshotsLoaded) {
+                    loadScreenshots();
+                } else {
                     subtext.innerText = 'Нажми, чтобы скрыть галерею';
                 }
             } else {
@@ -180,91 +673,60 @@
             }
         }
     
-        async function loadScreenshots() {
+        function loadScreenshots() {
             const gallery = document.getElementById('screenshotsGallery');
             const subtext = document.getElementById('gallerySubtext');
     
-            const repoApiUrl =
-                'https://api.github.com/repos/Cseislvt/site/contents/minecraft-server';
+            gallery.innerHTML = '';
+            subtext.innerText = 'Загрузка скриншотов...';
     
-            screenshotsLoading = true;
+            let loaded = 0;
+            let failed = 0;
     
-            try {
-                const response = await fetch(repoApiUrl, {
-                    cache: 'no-cache'
-                });
+            screenshotFiles.forEach(filename => {
+                const image = document.createElement('img');
     
-                if (!response.ok) {
-                    throw new Error(
-                        `GitHub API: HTTP ${response.status}`
-                    );
-                }
+                image.className = 'screenshot-item';
+                image.alt = filename;
+                image.loading = 'lazy';
     
-                const files = await response.json();
+                const imageUrl = screenshotBase + encodeURIComponent(filename);
     
-                const images = files.filter(file =>
-                    file.type === 'file' &&
-                    /\.(png|jpg|jpeg|gif|webp)$/i.test(file.name) &&
-                    file.download_url
-                );
+                image.onload = () => {
+                    loaded++;
+                    updateStatus();
+                };
     
-                gallery.innerHTML = '';
+                image.onerror = () => {
+                    failed++;
+                    image.alt = 'Ошибка загрузки: ' + filename;
+                    image.style.opacity = '0.3';
+                    updateStatus();
+                };
     
-                if (images.length === 0) {
-                    gallery.innerHTML =
-                        '<div style="color:#aaa; grid-column:1/-1;">Скриншотов пока нет.</div>';
+                image.onclick = () => {
+                    if (image.complete && image.naturalWidth > 0) {
+                        openLightbox(imageUrl);
+                    }
+                };
     
+                image.src = imageUrl;
+                gallery.appendChild(image);
+            });
+    
+            function updateStatus() {
+                if (loaded + failed === screenshotFiles.length) {
                     screenshotsLoaded = true;
-                    return;
+    
+                    subtext.innerText =
+                        `Загружено ${loaded} из ${screenshotFiles.length} скриншотов`;
+    
+                    if (failed > 0) {
+                        console.warn('Не удалось загрузить файлов:', failed);
+                    }
                 }
-    
-                images.forEach(file => {
-                    const image = document.createElement('img');
-    
-                    // Используем настоящий адрес изображения с GitHub
-                    image.src = file.download_url;
-                    image.className = 'screenshot-item';
-                    image.alt = 'Скриншот ' + file.name;
-                    image.loading = 'lazy';
-    
-                    image.addEventListener('click', () => {
-                        openLightbox(file.download_url);
-                    });
-    
-                    image.addEventListener('error', () => {
-                        image.alt = 'Не удалось загрузить: ' + file.name;
-                        image.style.opacity = '0.3';
-                    });
-    
-                    gallery.appendChild(image);
-                });
-    
-                screenshotsLoaded = true;
-    
-            } catch (error) {
-                console.error('Ошибка загрузки скриншотов:', error);
-    
-                gallery.innerHTML = `
-                    <div style="
-                        color:#ff7777;
-                        grid-column:1/-1;
-                        text-align:center;
-                        padding:20px;
-                    ">
-                        Не удалось загрузить скриншоты.<br>
-                        Попробуй нажать кнопку ещё раз.
-                    </div>
-                `;
-    
-                screenshotsLoaded = false;
-    
-            } finally {
-                screenshotsLoading = false;
-                subtext.innerText = 'Нажми, чтобы скрыть галерею';
             }
         }
-    
-        // ОТКРЫТИЕ ПОЛНОРАЗМЕРНОГО ИЗОБРАЖЕНИЯ
     
         function openLightbox(src) {
             const lightbox = document.getElementById('lightbox');
@@ -273,8 +735,6 @@
             img.src = src;
             lightbox.classList.add('open');
         }
-    
-        // ЗАКРЫТИЕ ПРОСМОТРА
     
         function closeLightbox() {
             const lightbox = document.getElementById('lightbox');
